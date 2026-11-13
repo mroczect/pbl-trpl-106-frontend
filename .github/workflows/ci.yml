@@ -58,7 +58,7 @@ jobs:
         run: |
           set -euo pipefail
           failed=0
-          for path in vendor dist src/build-info.php .php-cs-fixer.cache .phpstan.cache; do
+          for path in vendor/ dist/ src/build-info.php .php-cs-fixer.cache .phpstan.cache/; do
             if ! git check-ignore -q "$path"; then
               echo "::error::$path is not gitignored"
               failed=1
