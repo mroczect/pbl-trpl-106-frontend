@@ -1,20 +1,20 @@
-<h2 style="margin-top: 0; color: #000080;">Dashboard Konsumen</h2>
-<p style="font-size: 13px;">Selamat datang di GalonKu. Berikut ringkasan aktivitas Anda.</p>
+<h2 class="page-title">Dashboard Konsumen</h2>
+<p>Selamat datang. Berikut ringkasan aktivitas Anda.</p>
 
-<fieldset style="margin-top: 15px;">
+<fieldset>
     <legend>Status Pesanan</legend>
-    <div style="display: flex; gap: 20px;">
-        <div style="background: #fff; border: 1px inset #fff; padding: 10px; flex: 1; text-align: center;">
-            <div style="font-size: 24px; font-weight: bold;">1</div>
-            <div style="font-size: 12px;">Pesanan Aktif</div>
+    <div class="flex-row">
+        <div class="metric-box">
+            <div class="metric-value">1</div>
+            <div class="metric-label">Pesanan Aktif</div>
         </div>
-        <div style="background: #fff; border: 1px inset #fff; padding: 10px; flex: 1; text-align: center;">
-            <div style="font-size: 24px; font-weight: bold;">3 Hari</div>
-            <div style="font-size: 12px;">Sisa Galon (Estimasi)</div>
+        <div class="metric-box">
+            <div class="metric-value">3 Hari</div>
+            <div class="metric-label">Sisa Galon (Estimasi)</div>
         </div>
     </div>
 </fieldset>
 
-<div class="field-row" style="margin-top: 20px;">
-    <button onclick="window.location.href='/index.php?page=customer/products'">Pesan Galon / Gas Sekarang</button>
+<div class="field-row" style="margin-top: 12px;">
+    <a class="button" href="/index.php?page=customer/products">Pesan Galon / Gas</a>
 </div>

@@ -1,9 +1,15 @@
-<h2>Atur Reminder</h2>
-<div class="w3-card w3-padding w3-margin-top" style="max-width:400px;">
-    <form>
-        <label>Pengingat Berikutnya</label>
-        <input class="w3-input w3-border w3-margin-bottom" type="date">
+<h2 class="page-title">Atur Reminder</h2>
 
-        <button class="w3-button w3-black" type="submit">Simpan</button>
+<fieldset>
+    <legend>Pengingat Berikutnya</legend>
+    <form action="/index.php" method="POST">
+        <input type="hidden" name="page" value="customer/reminder">
+        <div class="field-row-stacked" style="margin-bottom: 12px;">
+            <label for="tanggal">Tanggal Pengingat</label>
+            <input id="tanggal" type="date" name="tanggal" required>
+        </div>
+        <div class="field-row" style="justify-content: flex-end;">
+            <button type="submit" class="default">Simpan</button>
+        </div>
     </form>
-</div>
+</fieldset>

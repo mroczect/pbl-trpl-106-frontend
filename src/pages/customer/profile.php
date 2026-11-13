@@ -1,15 +1,23 @@
-<h2>Profil Saya</h2>
-<div class="w3-card w3-padding w3-margin-top" style="max-width:400px;">
-    <form>
-        <label>Username</label>
-        <input class="w3-input w3-border w3-margin-bottom" type="text" value="budi123">
+<h2 class="page-title">Profil Saya</h2>
 
-        <label>No. HP</label>
-        <input class="w3-input w3-border w3-margin-bottom" type="text" value="08123456789">
-
-        <label>Alamat</label>
-        <textarea class="w3-input w3-border w3-margin-bottom">Jl. Ahmad Yani No. 12</textarea>
-
-        <button class="w3-button w3-black" type="submit">Simpan</button>
+<fieldset>
+    <legend>Data Diri</legend>
+    <form action="/index.php" method="POST">
+        <input type="hidden" name="page" value="customer/profile">
+        <div class="field-row-stacked" style="margin-bottom: 10px;">
+            <label for="username">Username</label>
+            <input id="username" type="text" name="username" value="budi123" required>
+        </div>
+        <div class="field-row-stacked" style="margin-bottom: 10px;">
+            <label for="no_hp">No. HP</label>
+            <input id="no_hp" type="tel" name="no_hp" value="08123456789" required>
+        </div>
+        <div class="field-row-stacked" style="margin-bottom: 12px;">
+            <label for="alamat">Alamat</label>
+            <textarea id="alamat" name="alamat" rows="3" required>Jl. Ahmad Yani No. 12</textarea>
+        </div>
+        <div class="field-row" style="justify-content: flex-end;">
+            <button type="submit" class="default">Simpan</button>
+        </div>
     </form>
-</div>
+</fieldset>
