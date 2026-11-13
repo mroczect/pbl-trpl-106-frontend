@@ -27,21 +27,25 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Decode Base64 Secrets
-        id: decode
+      - name: Decode Base64 Secrets Securely
         run: |
           set -euo pipefail
 
-          # Decode Private Key ke file sementara
+          # 1. Decode Private Key to a secure temporary file
           echo "${{ secrets.GPG_PRIVATE_KEY_BASE64 }}" | base64 -d > /tmp/gpg-private.asc
+          chmod 600 /tmp/gpg-private.asc
 
-          # Decode Fingerprint (hapus newline di akhir jika ada)
+          # 2. Decode Fingerprint to Environment Variable
           FP=$(echo "${{ secrets.GPG_FINGERPRINT_BASE64 }}" | base64 -d | tr -d '\n')
           echo "GPG_FINGERPRINT=${FP}" >> $GITHUB_ENV
 
-          # Decode Passphrase (hapus newline)
+          # 3. Decode Passphrase to Environment Variable (Used by Import GPG Action)
           PASS=$(echo "${{ secrets.GPG_PASSPHRASE_BASE64 }}" | base64 -d | tr -d '\n')
           echo "GPG_PASSPHRASE=${PASS}" >> $GITHUB_ENV
+
+          # 4. Decode Passphrase to a secure file (Used by CLI signing to prevent process leaks)
+          echo "${{ secrets.GPG_PASSPHRASE_BASE64 }}" | base64 -d | tr -d '\n' > /tmp/gpg-passphrase.txt
+          chmod 600 /tmp/gpg-passphrase.txt
 
           if [ -z "${FP}" ]; then
             echo "::error::GPG_FINGERPRINT_BASE64 decoded to an empty string."
@@ -206,7 +210,7 @@ jobs:
           echo "--- SHA256SUMS ---"
           cat SHA256SUMS
 
-      - name: Sign release artifacts
+      - name: Sign release artifacts securely
         env:
           VERSION: ${{ steps.version.outputs.name }}
         run: |
@@ -216,11 +220,14 @@ jobs:
             "galonku-src-${VERSION}.tar.gz" \
             "galonku-dist-${VERSION}.tar.gz" \
             "SHA256SUMS"; do
+
+            # Use --passphrase-file to prevent exposing the passphrase in process lists (ps)
             gpg --batch --yes --armor \
                 --local-user "${GPG_FINGERPRINT}" \
                 --pinentry-mode loopback \
-                --passphrase "${GPG_PASSPHRASE}" \
+                --passphrase-file /tmp/gpg-passphrase.txt \
                 --detach-sign "${f}"
+
             echo "signed: ${f}"
           done
           ls -la
@@ -228,7 +235,6 @@ jobs:
       - name: Verify signatures and checksums
         env:
           VERSION: ${{ steps.version.outputs.name }}
-          EXPECTED_FINGERPRINT: ${{ env.GPG_FINGERPRINT }}
         run: |
           set -euo pipefail
           cd release
@@ -247,8 +253,8 @@ jobs:
             fi
             signer=$(gpg --batch --status-fd 1 --verify "${f}.asc" "${f}" 2>&1 \
               | grep '^\[GNUPG:\] VALIDSIG' | awk '{print $3}')
-            if [ "${signer}" != "${EXPECTED_FINGERPRINT}" ]; then
-              echo "::error::Signer of ${f} is ${signer}, expected ${EXPECTED_FINGERPRINT}"
+            if [ "${signer}" != "${GPG_FINGERPRINT}" ]; then
+              echo "::error::Signer of ${f} is ${signer}, expected ${GPG_FINGERPRINT}"
               exit 1
             fi
           done
@@ -270,7 +276,7 @@ jobs:
           git checkout -q -b dist
           git add -A
 
-          # Cek apakah ada perubahan sebelum commit (lebih aman dari '|| { exit 0; }')
+          # Check if there are changes before committing
           if git diff --cached --quiet; then
             echo "No changes to commit to dist branch"
             exit 0
@@ -296,3 +302,10 @@ jobs:
           generate_release_notes: true
           draft: false
           prerelease: false
+
+      - name: Cleanup Secrets (Anti-Leak)
+        if: always()
+        run: |
+          # Securely delete the temporary GPG files
+          rm -f /tmp/gpg-private.asc
+          shred -u /tmp/gpg-passphrase.txt 2>/dev/null || rm -f /tmp/gpg-passphrase.txt
