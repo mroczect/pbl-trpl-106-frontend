@@ -1,31 +1,47 @@
-<div class="w3-container w3-padding-32 w3-center">
-    <div class="w3-card w3-white w3-padding w3-left-align" style="max-width:400px; margin:0 auto;">
-        <h2>Daftar Agent Depot</h2>
+<div class="window" style="width: 300px;">
+    <div class="title-bar">
+        <div class="title-bar-text">Daftar Agent Depot</div>
+    </div>
+    <div class="window-body">
         <form action="/index.php" method="GET">
             <input type="hidden" name="page" value="agent/dashboard">
 
-            <label>Username (Nama Depot)</label>
-            <input class="w3-input w3-border w3-margin-bottom" type="text" name="username" required>
+            <div class="field-row-stacked">
+                <label for="username">Username (Nama Depot)</label>
+                <input id="username" type="text" name="username" required>
+            </div>
 
-            <label>Email</label>
-            <input class="w3-input w3-border w3-margin-bottom" type="email" name="email" required>
+            <div class="field-row-stacked">
+                <label for="email">Email</label>
+                <input id="email" type="email" name="email" required>
+            </div>
 
-            <label>Password</label>
-            <input class="w3-input w3-border w3-margin-bottom" type="password" name="password" required>
+            <div class="field-row-stacked">
+                <label for="password">Password</label>
+                <input id="password" type="password" name="password" required>
+            </div>
 
-            <label>No. HP</label>
-            <input class="w3-input w3-border w3-margin-bottom" type="tel" name="no_hp" required>
+            <div class="field-row-stacked">
+                <label for="no_hp">No. HP</label>
+                <input id="no_hp" type="tel" name="no_hp" required>
+            </div>
 
-            <label>Lokasi Depot</label>
-            <textarea class="w3-input w3-border w3-margin-bottom" name="lokasi_depot" rows="2" required></textarea>
+            <div class="field-row-stacked">
+                <label for="lokasi_depot">Lokasi Depot</label>
+                <textarea id="lokasi_depot" name="lokasi_depot" rows="2" required></textarea>
+            </div>
 
-            <label>Link Shareloc (Google Maps)</label>
-            <input class="w3-input w3-border w3-margin-bottom" type="url" name="shareloc" placeholder="https://maps.app.goo.gl/..." required>
+            <div class="field-row-stacked">
+                <label for="shareloc">Link Shareloc (Google Maps)</label>
+                <input id="shareloc" type="url" name="shareloc" required>
+            </div>
 
-            <button class="w3-button w3-black w3-block" type="submit">Daftar Agent</button>
+            <div class="field-row" style="justify-content: flex-end; margin-top: 10px;">
+                <button type="submit">Daftar</button>
+            </div>
         </form>
-        <div class="w3-center w3-margin-top w3-padding-top">
-            <p>Mau beli galon? <a href="/index.php?page=auth/register-user" class="w3-text-blue">Daftar sebagai Konsumen</a></p>
+        <div style="margin-top: 10px; text-align: center;">
+            <a href="/index.php?page=auth/register-user">Daftar sebagai Konsumen</a>
         </div>
     </div>
 </div>

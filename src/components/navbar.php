@@ -1,11 +1,11 @@
-<nav class="w3-bar w3-white">
-    <a href="/index.php?page=home" class="w3-bar-item">Galonku</a>
-
-    <?php if (isset($layout) && $layout === 'public'): ?>
-        <a href="/index.php?page=auth/login" class="w3-bar-item">Masuk</a>
-        <a href="/index.php?page=auth/register-user" class="w3-bar-item">Daftar</a>
-
-    <?php elseif (isset($layout) && in_array($layout, ['customer', 'agent', 'admin'])): ?>
-        <a href="/index.php?page=auth/logout" class="w3-bar-item w3-right w3-text-red">Logout</a>
-    <?php endif; ?>
-</nav>
+<div class="title-bar" style="padding: 3px;">
+    <div class="title-bar-text">Galonku</div>
+    <div class="title-bar-controls" style="display: flex; gap: 5px;">
+        <?php if (isset($layout) && $layout === 'public'): ?>
+            <button onclick="window.location.href='/index.php?page=auth/login'">Masuk</button>
+            <button onclick="window.location.href='/index.php?page=auth/register-user'">Daftar</button>
+        <?php elseif (isset($layout) && in_array($layout, ['customer', 'agent', 'admin'])): ?>
+            <button onclick="window.location.href='/index.php?page=auth/logout'">Logout</button>
+        <?php endif; ?>
+    </div>
+</div>

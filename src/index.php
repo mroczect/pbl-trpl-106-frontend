@@ -47,25 +47,27 @@ if ($layout !== 'blank') {
     include __DIR__ . '/components/navbar.php';
 
     if ($is_dashboard) {
-        echo '<div class="w3-row">';
-        echo '<div class="w3-col" style="width:200px;">';
+        echo '<div style="display: flex; padding: 10px; gap: 10px; height: calc(100vh - 80px); box-sizing: border-box;">';
+        echo '<div style="width: 200px; flex-shrink: 0;">';
         include __DIR__ . "/components/sidebar-{$layout}.php";
         echo '</div>';
-        echo '<div class="w3-rest w3-padding">';
+        echo '<div class="window" style="flex: 1; margin: 0; display: flex; flex-direction: column;">';
+        echo '<div class="window-body" style="flex: 1; margin: 0; padding: 10px; overflow: auto;">';
     } else {
-        echo '<div class="w3-container">';
+        echo '<div style="padding: 20px; display: flex; justify-content: center; align-items: center; min-height: calc(100vh - 80px); box-sizing: border-box;">';
     }
 }
 
 if (file_exists($file)) {
     include $file;
 } else {
-    echo '<h1>404</h1>';
+    echo '<p>404 Not Found</p>';
 }
 
 if ($layout !== 'blank') {
     echo '</div>';
     if ($is_dashboard) {
+        echo '</div>';
         echo '</div>';
     }
     include __DIR__ . '/components/footer.php';

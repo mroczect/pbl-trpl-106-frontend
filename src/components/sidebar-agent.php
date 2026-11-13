@@ -1,6 +1,11 @@
-<div class="w3-sidebar w3-bar-block w3-white" style="width:200px;">
-    <a href="/index.php?page=agent/dashboard" class="w3-bar-item w3-button">Dashboard</a>
-    <a href="/index.php?page=agent/orders" class="w3-bar-item w3-button">Pesanan</a>
-    <a href="/index.php?page=agent/products" class="w3-bar-item w3-button">Produk</a>
-    <a href="/index.php?page=agent/stock" class="w3-bar-item w3-button">Stok</a>
+<div class="window" style="width: 100%; height: 100%; margin: 0;">
+    <div class="title-bar">
+        <div class="title-bar-text">Menu Agent</div>
+    </div>
+    <div class="window-body" style="margin: 0; padding: 4px;">
+        <button style="width: 100%; margin-bottom: 2px;" onclick="window.location.href='/index.php?page=agent/dashboard'">Dashboard</button>
+        <button style="width: 100%; margin-bottom: 2px;" onclick="window.location.href='/index.php?page=agent/orders'">Pesanan</button>
+        <button style="width: 100%; margin-bottom: 2px;" onclick="window.location.href='/index.php?page=agent/products'">Produk</button>
+        <button style="width: 100%; margin-bottom: 2px;" onclick="window.location.href='/index.php?page=agent/stock'">Stok</button>
+    </div>
 </div>
