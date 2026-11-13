@@ -21,37 +21,37 @@ $routes = [
 
 $page = $_GET['page'] ?? 'home';
 
-if (!array_key_exists($page, $routes)) {
+if (!isset($routes[$page])) {
     http_response_code(404);
     $page = '404';
 }
 
 $layout = $routes[$page]['layout'];
-$file_path = __DIR__ . '/pages/' . $routes[$page]['file'];
+$is_dashboard = in_array($layout, ['customer', 'agent', 'admin']);
+$file = __DIR__ . '/pages/' . $routes[$page]['file'];
 
 if ($layout !== 'blank') {
     include __DIR__ . '/components/head.php';
+    include __DIR__ . '/components/navbar.php';
 
-    if ($layout === 'customer' || $layout === 'agent' || $layout === 'admin') {
-        include __DIR__ . '/components/navbar.php';
+    if ($is_dashboard) {
         echo '<div class="dashboard-wrapper">';
         include __DIR__ . "/components/sidebar-{$layout}.php";
         echo '<div class="dashboard-content">';
     } else {
-        include __DIR__ . '/components/navbar.php';
         echo '<div class="public-wrapper">';
     }
 }
 
-if (file_exists($file_path)) {
-    include $file_path;
+if (file_exists($file)) {
+    include $file;
 } else {
-    echo "<h1>Error: File halaman tidak ditemukan.</h1>";
+    echo '<h1>404</h1>';
 }
 
 if ($layout !== 'blank') {
     echo '</div>';
-    if ($layout !== 'public') {
+    if ($is_dashboard) {
         echo '</div>';
     }
     include __DIR__ . '/components/footer.php';
