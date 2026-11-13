@@ -1,12 +1,24 @@
-<div class="title-bar" style="padding: 3px; margin-bottom: 10px;">
-    <div class="title-bar-text">GALONKU System</div>
-    <div class="title-bar-controls" style="display: flex; gap: 5px;">
-        <?php if (isset($layout) && $layout === 'public'): ?>
-            <button onclick="window.location.href='/index.php?page=auth/login'">Login</button>
-            <button onclick="window.location.href='/index.php?page=auth/register-user'">Register</button>
-        <?php elseif (isset($layout) && in_array($layout, ['customer', 'agent', 'admin'])): ?>
-            <span style="font-size: 11px; align-self: center; color: #fff; margin-right: 10px;">Role: <?= ucfirst($layout) ?></span>
-            <button onclick="window.location.href='/index.php?page=auth/logout'">Logout</button>
+<?php
+$layout = $layout ?? 'public';
+$isDashboard = in_array($layout, ['customer', 'agent', 'admin'], true);
+
+$roleLabels = [
+    'customer' => 'Konsumen',
+    'agent'    => 'Agent Depot',
+    'admin'    => 'Admin',
+];
+$roleLabel = $roleLabels[$layout] ?? 'Portal';
+?>
+<header class="title-bar app-title-bar">
+	<div class="title-bar-text">
+    Galonku<?= $layout === 'public' ? '' : ' &mdash; ' . htmlspecialchars($roleLabel, ENT_QUOTES, 'UTF-8') ?>
+	</div>
+    <nav class="app-title-bar-nav" aria-label="Navigasi akun">
+        <?php if ($layout === 'public'): ?>
+            <a class="button" href="/index.php?page=auth/login">Masuk</a>
+            <a class="button" href="/index.php?page=auth/register-user">Daftar</a>
+        <?php elseif ($isDashboard): ?>
+            <a class="button" href="/index.php?page=auth/logout">Logout</a>
         <?php endif; ?>
-    </div>
-</div>
+    </nav>
+</header>

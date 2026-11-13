@@ -1,19 +1,22 @@
-<div class="window" style="height: 100%;">
-    <div class="title-bar">
-        <div class="title-bar-text">Menu Vendor</div>
-    </div>
-    <div class="window-body" style="padding: 2px;">
-        <ul class="tree-view" style="height: 100%;">
-            <li><a href="/index.php?page=agent/dashboard" style="text-decoration:none; color:black;">Dashboard</a></li>
+<?php
+$currentPage = $_GET['page'] ?? '';
+$items = [
+    ['agent/dashboard', 'Dashboard'],
+    ['agent/orders',    'Pesanan'],
+    ['agent/products',  'Produk'],
+    ['agent/stock',     'Stok'],
+];
+?>
+<aside class="app-sidebar" aria-label="Menu Agent">
+    <ul class="tree-view">
+        <?php foreach ($items as [$page, $label]): ?>
+            <?php $active = $currentPage === $page; ?>
             <li>
-                <span>Operasional</span>
-                <ul>
-                    <li><a href="/index.php?page=agent/orders" style="text-decoration:none; color:black;">Pesanan Masuk</a></li>
-                    <li><a href="/index.php?page=agent/stock" style="text-decoration:none; color:black;">Gudang & Stok</a></li>
-                </ul>
+                <a href="/index.php?page=<?= htmlspecialchars($page, ENT_QUOTES, 'UTF-8') ?>"
+                   <?= $active ? 'aria-current="page"' : '' ?>>
+                    <?= htmlspecialchars($label, ENT_QUOTES, 'UTF-8') ?>
+                </a>
             </li>
-            <li><a href="/index.php?page=agent/products" style="text-decoration:none; color:black;">Katalog Produk</a></li>
-            <li><a href="/index.php?page=agent/profile-depot" style="text-decoration:none; color:black;">Profil Perusahaan</a></li>
-        </ul>
-    </div>
-</div>
+        <?php endforeach; ?>
+    </ul>
+</aside>

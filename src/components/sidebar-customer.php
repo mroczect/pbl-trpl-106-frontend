@@ -1,15 +1,26 @@
-<div class="window" style="width: 100%; height: 100%; margin: 0;">
-    <div class="title-bar">
-        <div class="title-bar-text">Menu Konsumen</div>
-    </div>
-    <div class="window-body" style="margin: 0; padding: 4px;">
-        <button style="width: 100%; margin-bottom: 2px;" onclick="window.location.href='/index.php?page=customer/dashboard'">Dashboard</button>
-        <button style="width: 100%; margin-bottom: 2px;" onclick="window.location.href='/index.php?page=customer/profile'">Profil</button>
-        <button style="width: 100%; margin-bottom: 2px;" onclick="window.location.href='/index.php?page=customer/products'">Produk</button>
-        <button style="width: 100%; margin-bottom: 2px;" onclick="window.location.href='/index.php?page=customer/cart'">Keranjang</button>
-        <button style="width: 100%; margin-bottom: 2px;" onclick="window.location.href='/index.php?page=customer/orders'">Pesanan</button>
-        <button style="width: 100%; margin-bottom: 2px;" onclick="window.location.href='/index.php?page=customer/history'">Riwayat</button>
-        <button style="width: 100%; margin-bottom: 2px;" onclick="window.location.href='/index.php?page=customer/reminder'">Reminder</button>
-        <button style="width: 100%; margin-bottom: 2px;" onclick="window.location.href='/index.php?page=customer/contact-agent'">Hubungi Agent</button>
-    </div>
-</div>
+<?php
+$currentPage = $_GET['page'] ?? '';
+$items = [
+    ['customer/dashboard',     'Dashboard'],
+    ['customer/profile',       'Profil'],
+    ['customer/products',      'Produk'],
+    ['customer/cart',          'Keranjang'],
+    ['customer/orders',        'Pesanan'],
+    ['customer/history',       'Riwayat'],
+    ['customer/reminder',      'Reminder'],
+    ['customer/contact-agent', 'Hubungi Agent'],
+];
+?>
+<aside class="app-sidebar" aria-label="Menu Konsumen">
+    <ul class="tree-view">
+        <?php foreach ($items as [$page, $label]): ?>
+            <?php $active = $currentPage === $page; ?>
+            <li>
+                <a href="/index.php?page=<?= htmlspecialchars($page, ENT_QUOTES, 'UTF-8') ?>"
+                   <?= $active ? 'aria-current="page"' : '' ?>>
+                    <?= htmlspecialchars($label, ENT_QUOTES, 'UTF-8') ?>
+                </a>
+            </li>
+        <?php endforeach; ?>
+    </ul>
+</aside>

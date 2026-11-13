@@ -1,5 +1,7 @@
-<div class="status-bar" style="position: fixed; bottom: 0; width: 100%; z-index: 999;">
-    <p class="status-bar-field">GALONKU Enterprise v1.0</p>
-</div>
+<footer class="status-bar app-status-bar" role="contentinfo">
+    <p class="status-bar-field">Galonku</p>
+    <p class="status-bar-field">Aplikasi Pengelolaan Depot Air</p>
+    <p class="status-bar-field">v1.0</p>
+</footer>
 </body>
 </html>

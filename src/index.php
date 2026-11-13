@@ -37,40 +37,75 @@ if (!isset($routes[$page])) {
     $page = '404';
 }
 
-$layout = $routes[$page]['layout'];
-$is_dashboard = in_array($layout, ['customer', 'agent', 'admin']);
-$file = __DIR__ . '/pages/' . $routes[$page]['file'];
+$layout      = $routes[$page]['layout'];
+$isDashboard = in_array($layout, ['customer', 'agent', 'admin'], true);
+$file        = __DIR__ . '/pages/' . $routes[$page]['file'];
 
-if ($layout !== 'blank') {
-    include __DIR__ . '/components/head.php';
-    include __DIR__ . '/components/navbar.php';
+$pageTitles = [
+    'home' => 'Galonku',
+    '404' => 'Halaman Tidak Ditemukan',
+    'auth/login' => 'Masuk',
+    'auth/register-user' => 'Daftar Konsumen',
+    'auth/register-agent' => 'Daftar Agent Depot',
+    'customer/dashboard' => 'Dashboard Konsumen',
+    'customer/profile' => 'Profil',
+    'customer/products' => 'Katalog Produk',
+    'customer/cart' => 'Keranjang',
+    'customer/checkout' => 'Konfirmasi Pesanan',
+    'customer/orders' => 'Pesanan Saya',
+    'customer/history' => 'Riwayat Pesanan',
+    'customer/invoice' => 'Invoice',
+    'customer/contact-agent' => 'Hubungi Agent',
+    'customer/reminder' => 'Reminder',
+    'agent/dashboard' => 'Dashboard Agent',
+    'agent/orders' => 'Pesanan Masuk',
+    'agent/products' => 'Kelola Produk',
+    'agent/stock' => 'Kelola Stok',
+    'agent/profile-depot' => 'Profil Depot',
+    'admin/dashboard' => 'Dashboard Admin',
+    'admin/customers' => 'Data Konsumen',
+    'admin/agents' => 'Data Agent',
+];
+$pageTitle = $pageTitles[$page] ?? 'Galonku';
 
-    if ($is_dashboard) {
-        echo '<div class="dashboard-wrapper">';
-        echo '<div class="sidebar-container">';
-        include __DIR__ . "/components/sidebar-{$layout}.php";
-        echo '</div>';
-        echo '<div class="window content-container">';
-        echo '<div class="content-body">';
-    } else {
-        echo '<div style="padding: 15px; min-height: calc(100vh - 80px); display: flex; align-items: center; justify-content: center;">';
+$centeredPages = ['home', '404', 'auth/login', 'auth/register-user', 'auth/register-agent'];
+$isCentered    = in_array($page, $centeredPages, true);
+
+
+if ($layout === 'blank') {
+    if (file_exists($file)) {
+        include $file;
     }
+    exit;
 }
 
-if (file_exists($file)) {
-    include $file;
+include __DIR__ . '/components/head.php';
+include __DIR__ . '/components/navbar.php';
+
+if ($isDashboard) {
+    echo '<div class="app-layout">';
+    include __DIR__ . "/components/sidebar-{$layout}.php";
+    echo '<main id="main-content" class="app-main">';
+    echo '<div class="app-main-inner">';
+
+    echo file_exists($file) ? '' : '<p>Halaman tidak ditemukan.</p>';
+    if (file_exists($file)) {
+        include $file;
+    }
+
+    echo '</div></main>';
+    echo '</div>';
 } else {
-    echo '<p>File halaman tidak ditemukan.</p>';
+    $mainClass = 'app-main' . ($isCentered ? ' app-main--centered' : '');
+    echo '<main id="main-content" class="' . $mainClass . '">';
+    echo '<div class="app-main-inner">';
+
+    echo file_exists($file) ? '' : '<p>Halaman tidak ditemukan.</p>';
+    if (file_exists($file)) {
+        include $file;
+    }
+
+    echo '</div></main>';
 }
 
-if ($layout !== 'blank') {
-    if ($is_dashboard) {
-        echo '</div>';
-        echo '</div>';
-        echo '</div>';
-    } else {
-        echo '</div>';
-    }
-    include __DIR__ . '/components/footer.php';
-}
-?>
+include __DIR__ . '/components/footer.php';
