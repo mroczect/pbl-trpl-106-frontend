@@ -11,6 +11,7 @@ $fullTitle = $pageTitle === 'Galonku' ? 'Galonku' : $pageTitle . ' - Galonku';
     <title><?= htmlspecialchars($fullTitle, ENT_QUOTES, 'UTF-8') ?></title>
     <link rel="stylesheet" href="https://unpkg.com/98.css">
     <link rel="stylesheet" href="/assets/css/style.css">
+    <script src="/assets/js/perf-overlay.js" defer></script>
 </head>
 <body>
 <a class="skip-link" href="#main-content">Lewati ke konten utama</a>
