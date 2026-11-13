@@ -1,0 +1,298 @@
+name: Build
+
+on:
+  push:
+    branches: [master]
+    tags: ['v*']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: build-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  COMPOSER_NO_INTERACTION: '1'
+  COMPOSER_PROCESS_TIMEOUT: '600'
+
+jobs:
+  build:
+    name: Build, sign, and publish
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Decode Base64 Secrets
+        id: decode
+        run: |
+          set -euo pipefail
+
+          # Decode Private Key ke file sementara
+          echo "${{ secrets.GPG_PRIVATE_KEY_BASE64 }}" | base64 -d > /tmp/gpg-private.asc
+
+          # Decode Fingerprint (hapus newline di akhir jika ada)
+          FP=$(echo "${{ secrets.GPG_FINGERPRINT_BASE64 }}" | base64 -d | tr -d '\n')
+          echo "GPG_FINGERPRINT=${FP}" >> $GITHUB_ENV
+
+          # Decode Passphrase (hapus newline)
+          PASS=$(echo "${{ secrets.GPG_PASSPHRASE_BASE64 }}" | base64 -d | tr -d '\n')
+          echo "GPG_PASSPHRASE=${PASS}" >> $GITHUB_ENV
+
+          if [ -z "${FP}" ]; then
+            echo "::error::GPG_FINGERPRINT_BASE64 decoded to an empty string."
+            exit 1
+          fi
+
+      - name: Import GPG key
+        uses: crazy-max/ghaction-import-gpg@v6
+        with:
+          gpg_private_key_file: /tmp/gpg-private.asc
+          passphrase: ${{ env.GPG_PASSPHRASE }}
+          fingerprint: ${{ env.GPG_FINGERPRINT }}
+          git_user_signingkey: true
+          git_commit_gpgsign: true
+          git_tag_gpgsign: true
+          git_config_global: true
+          git_user_name: 'github-actions[bot]'
+          git_user_email: 'github-actions[bot]@users.noreply.github.com'
+
+      - name: Determine version
+        id: version
+        run: |
+          set -euo pipefail
+          if [[ "${GITHUB_REF}" == refs/tags/v* ]]; then
+            version="${GITHUB_REF#refs/tags/v}"
+            is_release=true
+          else
+            short_sha="$(git rev-parse --short=7 HEAD)"
+            version="snapshot-${short_sha}"
+            is_release=false
+          fi
+          echo "name=${version}" >> "$GITHUB_OUTPUT"
+          echo "is_release=${is_release}" >> "$GITHUB_OUTPUT"
+          echo "Version: ${version} (release=${is_release})"
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.5'
+          extensions: mbstring, openssl, tokenizer, xml, fileinfo
+          coverage: none
+          tools: composer:v2
+          ini-values: error_reporting=E_ALL, display_errors=1, log_errors=0
+
+      - name: Get composer cache directory
+        id: composer-cache
+        run: echo "dir=$(composer config cache-files-dir)" >> "$GITHUB_OUTPUT"
+
+      - name: Restore composer cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-php-8.5-composer-${{ hashFiles('composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-php-8.5-composer-
+            ${{ runner.os }}-composer-
+
+      - name: Install dependencies
+        run: composer install --no-interaction --prefer-dist --no-progress
+
+      - name: Build dist
+        run: php bin/build-dist.php
+
+      - name: Verify dist PHP syntax
+        run: |
+          set -euo pipefail
+          failed=0
+          while IFS= read -r -d '' file; do
+            if ! php -l "$file" > /dev/null 2>&1; then
+              php -l "$file"
+              failed=1
+            fi
+          done < <(find dist -name '*.php' -print0)
+          if [ "${failed}" -ne 0 ]; then
+            echo "::error::dist contains PHP files with syntax errors"
+            exit 1
+          fi
+
+      - name: Verify vendored assets are byte-identical
+        run: |
+          set -euo pipefail
+          if [ ! -d src/assets/vendor ]; then
+            exit 0
+          fi
+          failed=0
+          while IFS= read -r -d '' src_file; do
+            rel="${src_file#src/}"
+            dst_file="dist/${rel}"
+            if [ ! -f "${dst_file}" ] || ! cmp -s "${src_file}" "${dst_file}"; then
+              echo "::error::Byte mismatch or missing: ${rel}"
+              failed=1
+            fi
+          done < <(find src/assets/vendor -type f -print0)
+          if [ "${failed}" -ne 0 ]; then exit 1; fi
+
+      - name: Smoke test dist
+        run: |
+          set -euo pipefail
+          php -S 127.0.0.1:8000 -t dist > /tmp/server.log 2>&1 &
+          server_pid=$!
+          trap 'kill ${server_pid} 2>/dev/null || true' EXIT
+
+          for _ in $(seq 1 50); do
+            if curl -sf -o /dev/null http://127.0.0.1:8000/ 2>/dev/null; then
+              break
+            fi
+            sleep 0.1
+          done
+
+          failed=0
+          for route in \
+            "index.php?page=home" \
+            "index.php?page=auth/login" \
+            "index.php?page=customer/dashboard" \
+            "index.php?page=admin/dashboard"; do
+            code=$(curl -s -o /tmp/body.html -w '%{http_code}' "http://127.0.0.1:8000/${route}")
+            if [ "${code}" != "200" ]; then
+              echo "::error::${route} returned ${code}"
+              head -30 /tmp/body.html
+              failed=1
+            fi
+            if grep -qE '(Fatal error|Parse error|Warning:|Notice:|Deprecated:)' /tmp/body.html; then
+              echo "::error::${route} contains PHP error output"
+              grep -E '(Fatal error|Parse error|Warning:|Notice:|Deprecated:)' /tmp/body.html | head -20
+              failed=1
+            fi
+          done
+          if [ "${failed}" -ne 0 ]; then
+            echo "--- server log ---"
+            cat /tmp/server.log
+            exit 1
+          fi
+          echo "dist serves correctly"
+
+      - name: Package source and dist
+        env:
+          VERSION: ${{ steps.version.outputs.name }}
+        run: |
+          set -euo pipefail
+          mkdir -p release
+
+          git archive --format=tar.gz \
+            --prefix="galonku-src-${VERSION}/" \
+            -o "release/galonku-src-${VERSION}.tar.gz" \
+            HEAD
+
+          tar czf "release/galonku-dist-${VERSION}.tar.gz" \
+            --transform="s,^\./,galonku-dist-${VERSION}/," \
+            -C dist .
+
+          ls -la release/
+
+      - name: Generate SHA256SUMS
+        env:
+          VERSION: ${{ steps.version.outputs.name }}
+        run: |
+          set -euo pipefail
+          cd release
+          sha256sum "galonku-src-${VERSION}.tar.gz" \
+                    "galonku-dist-${VERSION}.tar.gz" \
+            > SHA256SUMS
+          echo "--- SHA256SUMS ---"
+          cat SHA256SUMS
+
+      - name: Sign release artifacts
+        env:
+          VERSION: ${{ steps.version.outputs.name }}
+        run: |
+          set -euo pipefail
+          cd release
+          for f in \
+            "galonku-src-${VERSION}.tar.gz" \
+            "galonku-dist-${VERSION}.tar.gz" \
+            "SHA256SUMS"; do
+            gpg --batch --yes --armor \
+                --local-user "${GPG_FINGERPRINT}" \
+                --pinentry-mode loopback \
+                --passphrase "${GPG_PASSPHRASE}" \
+                --detach-sign "${f}"
+            echo "signed: ${f}"
+          done
+          ls -la
+
+      - name: Verify signatures and checksums
+        env:
+          VERSION: ${{ steps.version.outputs.name }}
+          EXPECTED_FINGERPRINT: ${{ env.GPG_FINGERPRINT }}
+        run: |
+          set -euo pipefail
+          cd release
+
+          sha256sum -c SHA256SUMS
+
+          for f in \
+            "galonku-src-${VERSION}.tar.gz" \
+            "galonku-dist-${VERSION}.tar.gz" \
+            "SHA256SUMS"; do
+            status=$(gpg --batch --status-fd 1 --verify "${f}.asc" "${f}" 2>&1 | grep -c '^\[GNUPG:\] GOODSIG' || true)
+            if [ "${status}" != "1" ]; then
+              echo "::error::Signature on ${f} did not verify"
+              gpg --verify "${f}.asc" "${f}" || true
+              exit 1
+            fi
+            signer=$(gpg --batch --status-fd 1 --verify "${f}.asc" "${f}" 2>&1 \
+              | grep '^\[GNUPG:\] VALIDSIG' | awk '{print $3}')
+            if [ "${signer}" != "${EXPECTED_FINGERPRINT}" ]; then
+              echo "::error::Signer of ${f} is ${signer}, expected ${EXPECTED_FINGERPRINT}"
+              exit 1
+            fi
+          done
+          echo "All checksums and signatures verified"
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-${{ steps.version.outputs.name }}
+          path: release/
+          retention-days: 30
+
+      - name: Publish dist to dist branch
+        if: github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/tags/v')
+        run: |
+          set -euo pipefail
+          cd dist
+          git init -q
+          git checkout -q -b dist
+          git add -A
+
+          # Cek apakah ada perubahan sebelum commit (lebih aman dari '|| { exit 0; }')
+          if git diff --cached --quiet; then
+            echo "No changes to commit to dist branch"
+            exit 0
+          fi
+
+          git commit -q -S -m "build: ${GITHUB_SHA}"
+          git remote add origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          git push -q --force origin dist
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            release/galonku-src-${{ steps.version.outputs.name }}.tar.gz
+            release/galonku-src-${{ steps.version.outputs.name }}.tar.gz.asc
+            release/galonku-dist-${{ steps.version.outputs.name }}.tar.gz
+            release/galonku-dist-${{ steps.version.outputs.name }}.tar.gz.asc
+            release/SHA256SUMS
+            release/SHA256SUMS.asc
+          generate_release_notes: true
+          draft: false
+          prerelease: false
