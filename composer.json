@@ -1,4 +1,7 @@
 {
+	"require": {
+		"php": ">=8.0"
+	},
 	"scripts": {
 		"build": "php build.php",
 		"clean": "rm -f src/build-info.php"
