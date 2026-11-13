@@ -90,7 +90,9 @@ include __DIR__ . '/components/head.php';
 include __DIR__ . '/components/navbar.php';
 
 $renderFlash = function () use ($flash) {
-    if (!$flash) return;
+    if (!$flash) {
+        return;
+    }
     echo '<div class="notification" role="status" aria-live="polite">'
        . htmlspecialchars($flash, ENT_QUOTES, 'UTF-8')
        . '</div>';

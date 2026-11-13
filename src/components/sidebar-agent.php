@@ -1,11 +1,11 @@
 <?php
 $currentPage = $_GET['page'] ?? '';
 $items = [
-	['agent/dashboard', 'Dashboard'],
-	['agent/orders',    'Pesanan'],
-	['agent/products',  'Produk'],
-	['agent/stock',     'Stok'],
-	['agent/profile-depot', 'Profil Depot'],
+    ['agent/dashboard', 'Dashboard'],
+    ['agent/orders',    'Pesanan'],
+    ['agent/products',  'Produk'],
+    ['agent/stock',     'Stok'],
+    ['agent/profile-depot', 'Profil Depot'],
 ];
 ?>
 <aside class="app-sidebar" aria-label="Menu Agent">

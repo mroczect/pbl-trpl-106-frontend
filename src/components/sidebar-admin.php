@@ -1,9 +1,9 @@
 <?php
 $currentPage = $_GET['page'] ?? '';
 $items = [
-	['admin/dashboard', 'Ringkasan'],
-	['admin/customers', 'Data Konsumen'],
-	['admin/agents',    'Data Agent'],
+    ['admin/dashboard', 'Ringkasan'],
+    ['admin/customers', 'Data Konsumen'],
+    ['admin/agents',    'Data Agent'],
 ];
 ?>
 <aside class="app-sidebar" aria-label="Menu Admin">

@@ -1,5 +1,5 @@
 <?php
-$layout = $layout ?? 'public';
+$layout ??= 'public';
 $isDashboard = in_array($layout, ['customer', 'agent', 'admin'], true);
 
 $roleLabels = [
