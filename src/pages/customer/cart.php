@@ -1,9 +1,13 @@
 <h2 class="page-title">Keranjang Belanja</h2>
 
 <div class="sunken-panel">
-    <table class="interactive">
+    <table class="data-grid">
         <thead>
-            <tr><th>Produk</th><th>Jumlah</th><th>Total</th></tr>
+            <tr>
+                <th scope="col">Produk</th>
+                <th scope="col">Jumlah</th>
+                <th scope="col">Total</th>
+            </tr>
         </thead>
         <tbody>
             <tr>
@@ -15,6 +19,6 @@
     </table>
 </div>
 
-<div class="field-row" style="justify-content: flex-end; margin-top: 12px;">
+<div class="field-row mt-2" style="justify-content: flex-end;">
     <a class="button" href="/index.php?page=customer/checkout">Lanjut ke Checkout</a>
 </div>

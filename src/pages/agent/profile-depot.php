@@ -1,22 +1,20 @@
-<h2 style="margin-top: 0; color: #000080;">Profil Depot</h2>
+<h2 class="page-title">Profil Depot</h2>
 
-<fieldset style="margin-top: 15px; max-width: 500px;">
+<fieldset class="form-narrow mt-3">
     <legend>Informasi Depot</legend>
-    <form action="/index.php" method="GET">
-        <input type="hidden" name="page" value="agent/profile-depot">
-
-        <div class="field-row-stacked" style="margin-bottom: 10px;">
+    <form action="/index.php?page=agent/profile-depot" method="POST">
+        <div class="field-row-stacked mt-2">
             <label for="nama_depot">Nama Depot</label>
-            <input id="nama_depot" type="text" value="Depot Air Segar" style="width: 100%; box-sizing: border-box; padding: 4px;">
+            <input id="nama_depot" type="text" name="nama_depot" value="Depot Air Segar">
         </div>
 
-        <div class="field-row-stacked" style="margin-bottom: 15px;">
+        <div class="field-row-stacked mt-3">
             <label for="shareloc">Lokasi Shareloc (Google Maps)</label>
-            <input id="shareloc" type="text" value="https://maps.app.goo.gl/..." style="width: 100%; box-sizing: border-box; padding: 4px;">
+            <input id="shareloc" type="url" name="shareloc" value="https://maps.app.goo.gl/...">
         </div>
 
-        <div class="field-row" style="justify-content: flex-end;">
-            <button type="submit" style="padding: 4px 15px;">Simpan Perubahan</button>
+        <div class="field-row mt-2" style="justify-content: flex-end;">
+            <button type="submit">Simpan Perubahan</button>
         </div>
     </form>
 </fieldset>

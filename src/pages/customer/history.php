@@ -1,13 +1,13 @@
-<h2 style="margin-top: 0; color: #000080;">Riwayat Pesanan</h2>
+<h2 class="page-title">Riwayat Pesanan</h2>
 
-<div class="sunken-panel" style="margin-top: 15px; height: 200px;">
-    <table class="interactive" style="width: 100%;">
+<div class="sunken-panel mt-3">
+    <table class="data-grid">
         <thead>
             <tr>
-                <th>ID Pesanan</th>
-                <th>Total</th>
-                <th>Status</th>
-                <th>Aksi</th>
+                <th scope="col">ID Pesanan</th>
+                <th scope="col">Total</th>
+                <th scope="col">Status</th>
+                <th scope="col">Aksi</th>
             </tr>
         </thead>
         <tbody>
@@ -15,7 +15,9 @@
                 <td>ORD-000</td>
                 <td>Rp 20.000</td>
                 <td>Selesai</td>
-                <td><button onclick="window.location.href='/index.php?page=customer/invoice'" style="padding: 0 8px;">Lihat Invoice</button></td>
+                <td>
+                    <a class="button btn-sm" href="/index.php?page=customer/invoice">Lihat Invoice</a>
+                </td>
             </tr>
         </tbody>
     </table>

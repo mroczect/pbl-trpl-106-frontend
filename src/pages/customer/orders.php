@@ -1,14 +1,14 @@
 <h2 class="page-title">Pesanan Saya</h2>
 
 <div class="sunken-panel">
-    <table class="interactive">
+    <table class="data-grid">
         <thead>
             <tr>
-                <th>ID</th>
-                <th>Tanggal</th>
-                <th>Total</th>
-                <th>Status</th>
-                <th>Aksi</th>
+                <th scope="col">ID</th>
+                <th scope="col">Tanggal</th>
+                <th scope="col">Total</th>
+                <th scope="col">Status</th>
+                <th scope="col">Aksi</th>
             </tr>
         </thead>
         <tbody>
@@ -18,11 +18,7 @@
                 <td>Rp 20.000</td>
                 <td>Diproses</td>
                 <td>
-                    <a class="button"
-                       href="/index.php?page=customer/invoice"
-                       style="min-height:22px; min-width:auto; padding:2px 10px; font-size:11px;">
-                        Invoice
-                    </a>
+                    <a class="button btn-sm" href="/index.php?page=customer/invoice">Invoice</a>
                 </td>
             </tr>
         </tbody>

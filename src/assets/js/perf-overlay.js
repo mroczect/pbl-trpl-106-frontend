@@ -5,19 +5,29 @@
     const STORAGE_KEY = 'galonku:perf';
     const params = new URLSearchParams(location.search);
 
-    if (params.get('perf') === '1') localStorage.setItem(STORAGE_KEY, '1');
-    if (params.get('perf') === '0') localStorage.removeItem(STORAGE_KEY);
+    // C2: safe localStorage (throws di private mode / sandboxed iframe)
+    function safeGet(key)  { try { return localStorage.getItem(key); } catch { return null; } }
+    function safeSet(k, v) { try { localStorage.setItem(k, v); } catch {} }
+    function safeDel(k)    { try { localStorage.removeItem(k); } catch {} }
 
-    let enabled = localStorage.getItem(STORAGE_KEY) === '1';
+    // C2: performance guard (polyfill lama / environment aneh)
+    const perf = (typeof performance !== 'undefined' && performance) || null;
+    function now() { return perf && typeof perf.now === 'function' ? perf.now() : Date.now(); }
+
+    if (params.get('perf') === '1') safeSet(STORAGE_KEY, '1');
+    if (params.get('perf') === '0') safeDel(STORAGE_KEY);
+
+    let enabled = safeGet(STORAGE_KEY) === '1';
     let overlay = null;
     let rafId = 0;
 
-    let frames = 0, lastSample = performance.now(), fps = 0;
+    let frames = 0, lastSample = now(), fps = 0;
     let frameTimes = [], longestFrame = 0;
-    let prevFrame = performance.now();
+    let prevFrame = now();
 
     const loadInfo = (() => {
-        const nav = performance.getEntriesByType('navigation')[0];
+        if (!perf || typeof perf.getEntriesByType !== 'function') return '—';
+        const nav = perf.getEntriesByType('navigation')[0];
         if (!nav) return '—';
         const t = (nav.loadEventEnd || nav.domContentLoadedEventEnd || 0) - (nav.startTime || 0);
         return t > 0 ? t.toFixed(0) + ' ms' : '—';
@@ -45,7 +55,7 @@
             display:flex;justify-content:space-between;align-items:center;
             cursor:move;font-size:11px;
         `;
-        bar.innerHTML = `<span>Performance</span><span data-perf-close style="cursor:pointer;padding:0 4px;">×</span>`;
+        bar.innerHTML = '<span>Performance</span><span data-perf-close style="cursor:pointer;padding:0 4px;">×</span>';
 
         const body = document.createElement('div');
         body.style.cssText = 'padding:6px 8px;line-height:1.5;';
@@ -64,7 +74,6 @@
 
         bar.querySelector('[data-perf-close]').addEventListener('click', () => toggle(false));
 
-        // draggable
         let drag = null;
         bar.addEventListener('mousedown', (e) => {
             if (e.target.hasAttribute('data-perf-close')) return;
@@ -86,22 +95,22 @@
     }
 
     function readHeap() {
-        return performance.memory
-            ? (performance.memory.usedJSHeapSize / 1048576).toFixed(1) + ' MB'
-            : 'n/a';
+        const m = perf && perf.memory;
+        return m ? (m.usedJSHeapSize / 1048576).toFixed(1) + ' MB' : 'n/a';
     }
 
-    function loop(now) {
+    function loop() {
+        const t = now();
         frames++;
-        const dt = now - lastSample;
+        const dt = t - lastSample;
         if (dt >= 500) {
             fps = frames * 1000 / dt;
             frames = 0;
-            lastSample = now;
+            lastSample = t;
         }
 
-        const ft = now - prevFrame;
-        prevFrame = now;
+        const ft = t - prevFrame;
+        prevFrame = t;
         if (ft > 0 && ft < 2000) {
             frameTimes.push(ft);
             if (frameTimes.length > 60) frameTimes.shift();
@@ -121,7 +130,7 @@
         if (overlay) return;
         overlay = buildOverlay();
         frames = 0;
-        lastSample = prevFrame = performance.now();
+        lastSample = prevFrame = now();
         frameTimes = [];
         longestFrame = 0;
         rafId = requestAnimationFrame(loop);
@@ -135,11 +144,10 @@
 
     function toggle(force) {
         enabled = typeof force === 'boolean' ? force : !enabled;
-        if (enabled) { localStorage.setItem(STORAGE_KEY, '1'); start(); }
-        else { localStorage.removeItem(STORAGE_KEY); stop(); }
+        if (enabled) { safeSet(STORAGE_KEY, '1'); start(); }
+        else { safeDel(STORAGE_KEY); stop(); }
     }
 
-    // Ctrl+Shift+P untuk buka/tutup
     window.addEventListener('keydown', (e) => {
         if (e.ctrlKey && e.shiftKey && (e.key === 'P' || e.key === 'p')) {
             e.preventDefault();

@@ -1,8 +1,7 @@
-<h2 style="color: #000080; margin-top: 0;">System Overview - Admin</h2>
-<p style="font-size: 12px; margin-bottom: 15px;">Pantauan metrik utama aplikasi GALONKU secara keseluruhan.</p>
+<h2 class="page-title">Ringkasan Sistem</h2>
+<p>Pantauan metrik utama aplikasi Galonku secara keseluruhan.</p>
 
-<!-- Baris Metrik -->
-<div class="flex-row" style="margin-bottom: 20px;">
+<div class="flex-row mt-3" style="margin-bottom: 20px;">
     <div class="metric-box">
         <div class="metric-value">1,240</div>
         <div class="metric-label">Total Konsumen</div>
@@ -22,10 +21,10 @@
     <table class="data-grid">
         <thead>
             <tr>
-                <th>Waktu</th>
-                <th>Aktor</th>
-                <th>Aktivitas</th>
-                <th>Status</th>
+                <th scope="col">Waktu</th>
+                <th scope="col">Aktor</th>
+                <th scope="col">Aktivitas</th>
+                <th scope="col">Status</th>
             </tr>
         </thead>
         <tbody>
