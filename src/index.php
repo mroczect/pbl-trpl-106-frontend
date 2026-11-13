@@ -12,11 +12,23 @@ $routes = [
     'customer/dashboard' => ['file' => 'customer/dashboard.php', 'layout' => 'customer'],
     'customer/profile' => ['file' => 'customer/profile.php', 'layout' => 'customer'],
     'customer/products' => ['file' => 'customer/products.php', 'layout' => 'customer'],
+    'customer/cart' => ['file' => 'customer/cart.php', 'layout' => 'customer'],
+    'customer/checkout' => ['file' => 'customer/checkout.php', 'layout' => 'customer'],
+    'customer/orders' => ['file' => 'customer/orders.php', 'layout' => 'customer'],
+    'customer/history' => ['file' => 'customer/history.php', 'layout' => 'customer'],
+    'customer/invoice' => ['file' => 'customer/invoice.php', 'layout' => 'customer'],
+    'customer/contact-agent' => ['file' => 'customer/contact-agent.php', 'layout' => 'customer'],
+    'customer/reminder' => ['file' => 'customer/reminder.php', 'layout' => 'customer'],
 
     'agent/dashboard' => ['file' => 'agent/dashboard.php', 'layout' => 'agent'],
+    'agent/orders' => ['file' => 'agent/orders.php', 'layout' => 'agent'],
+    'agent/products' => ['file' => 'agent/products.php', 'layout' => 'agent'],
+    'agent/stock' => ['file' => 'agent/stock.php', 'layout' => 'agent'],
+    'agent/profile-depot' => ['file' => 'agent/profile-depot.php', 'layout' => 'agent'],
 
     'admin/dashboard' => ['file' => 'admin/dashboard.php', 'layout' => 'admin'],
     'admin/customers' => ['file' => 'admin/customers.php', 'layout' => 'admin'],
+    'admin/agents' => ['file' => 'admin/agents.php', 'layout' => 'admin'],
 ];
 
 $page = $_GET['page'] ?? 'home';
@@ -35,11 +47,13 @@ if ($layout !== 'blank') {
     include __DIR__ . '/components/navbar.php';
 
     if ($is_dashboard) {
-        echo '<div class="dashboard-wrapper">';
+        echo '<div class="w3-row">';
+        echo '<div class="w3-col" style="width:200px;">';
         include __DIR__ . "/components/sidebar-{$layout}.php";
-        echo '<div class="dashboard-content">';
+        echo '</div>';
+        echo '<div class="w3-rest w3-padding">';
     } else {
-        echo '<div class="public-wrapper">';
+        echo '<div class="w3-container">';
     }
 }
 
