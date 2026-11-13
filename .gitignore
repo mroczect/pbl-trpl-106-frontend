@@ -152,3 +152,15 @@ vite.config.ts.timestamp-*
 .snapcat.md
 
 /src/build-info.php
+
+
+/vendor/
+/dist/
+/src/build-info.php
+.php-cs-fixer.cache
+.phpstan.cache/
+.DS_Store
+Thumbs.db
+*.log
+.idea/
+.vscode/
