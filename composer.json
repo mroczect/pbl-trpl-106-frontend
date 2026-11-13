@@ -1,0 +1,6 @@
+{
+	"scripts": {
+		"build": "php build.php",
+		"clean": "rm -f src/build-info.php"
+	}
+}
