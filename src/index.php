@@ -1,5 +1,9 @@
 <?php
 
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
 $routes = [
     'home' => ['file' => 'home.php', 'layout' => 'public'],
     '404' => ['file' => '404.php', 'layout' => 'public'],
@@ -30,7 +34,7 @@ $routes = [
     'admin/agents' => ['file' => 'admin/agents.php', 'layout' => 'admin'],
 ];
 
-$page = $_GET['page'] ?? 'home';
+$page = $_GET['page'] ?? $_POST['page'] ?? 'home';
 
 if (!isset($routes[$page])) {
     http_response_code(404);
@@ -62,7 +66,7 @@ $pageTitles = [
     'agent/products' => 'Kelola Produk',
     'agent/stock' => 'Kelola Stok',
     'agent/profile-depot' => 'Profil Depot',
-    'admin/dashboard' => 'Dashboard Admin',
+    'admin/dashboard' => 'Ringkasan Sistem',
     'admin/customers' => 'Data Konsumen',
     'admin/agents' => 'Data Agent',
 ];
@@ -71,6 +75,9 @@ $pageTitle = $pageTitles[$page] ?? 'Galonku';
 $centeredPages = ['home', '404', 'auth/login', 'auth/register-user', 'auth/register-agent'];
 $isCentered    = in_array($page, $centeredPages, true);
 
+// Flash message (M6)
+$flash = $_SESSION['flash'] ?? null;
+unset($_SESSION['flash']);
 
 if ($layout === 'blank') {
     if (file_exists($file)) {
@@ -82,29 +89,37 @@ if ($layout === 'blank') {
 include __DIR__ . '/components/head.php';
 include __DIR__ . '/components/navbar.php';
 
+$renderFlash = function () use ($flash) {
+    if (!$flash) return;
+    echo '<div class="notification" role="status" aria-live="polite">'
+       . htmlspecialchars($flash, ENT_QUOTES, 'UTF-8')
+       . '</div>';
+};
+
 if ($isDashboard) {
     echo '<div class="app-layout">';
     include __DIR__ . "/components/sidebar-{$layout}.php";
     echo '<main id="main-content" class="app-main">';
+    echo '<h1 class="sr-only">' . htmlspecialchars($pageTitle, ENT_QUOTES, 'UTF-8') . '</h1>';
     echo '<div class="app-main-inner">';
-
-    echo file_exists($file) ? '' : '<p>Halaman tidak ditemukan.</p>';
+    $renderFlash();
     if (file_exists($file)) {
         include $file;
+    } else {
+        echo '<p>Halaman tidak ditemukan.</p>';
     }
-
-    echo '</div></main>';
-    echo '</div>';
+    echo '</div></main></div>';
 } else {
     $mainClass = 'app-main' . ($isCentered ? ' app-main--centered' : '');
     echo '<main id="main-content" class="' . $mainClass . '">';
+    echo '<h1 class="sr-only">' . htmlspecialchars($pageTitle, ENT_QUOTES, 'UTF-8') . '</h1>';
     echo '<div class="app-main-inner">';
-
-    echo file_exists($file) ? '' : '<p>Halaman tidak ditemukan.</p>';
+    $renderFlash();
     if (file_exists($file)) {
         include $file;
+    } else {
+        echo '<p>Halaman tidak ditemukan.</p>';
     }
-
     echo '</div></main>';
 }
 

@@ -17,9 +17,13 @@ function galonku_build_info(): array
 
     $buildFile = dirname(__DIR__) . '/build-info.php';
     if (is_file($buildFile)) {
-        $info = require $buildFile;
-        if (is_array($info)) {
-            return $cache = $info + $defaults;
+        try {
+            $info = require $buildFile;
+            if (is_array($info)) {
+                return $cache = $info + $defaults;
+            }
+        } catch (\Throwable $e) {
+            // File corrupt / half-written — fall back ke git, jangan crash footer
         }
     }
 
