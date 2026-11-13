@@ -147,3 +147,6 @@ vite.config.ts.timestamp-*
 
 # Turbo Repo
 .turbo
+.velodiff_dist.diff
+
+.snapcat.md
