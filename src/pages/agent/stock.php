@@ -1,15 +1,25 @@
-<h2>Kelola Stok</h2>
-<div class="w3-card w3-white w3-padding w3-margin-top" style="max-width:400px;">
-    <form action="/index.php?page=agent/stock" method="GET">
-        <label>Pilih Produk</label>
-        <select class="w3-select w3-border w3-margin-bottom">
-            <option>Galon 19L</option>
-            <option>Gas LPG 3kg</option>
-        </select>
+<h2 style="margin-top: 0; color: #000080;">Kelola Stok</h2>
 
-        <label>Jumlah Stok Baru</label>
-        <input class="w3-input w3-border w3-margin-bottom" type="number" value="50">
+<fieldset style="margin-top: 15px; max-width: 400px;">
+    <legend>Perbarui Stok Produk</legend>
+    <form action="/index.php" method="GET">
+        <input type="hidden" name="page" value="agent/stock">
 
-        <button class="w3-button w3-black w3-block" type="submit">Simpan Stok</button>
+        <div class="field-row-stacked" style="margin-bottom: 10px;">
+            <label for="produk">Pilih Produk</label>
+            <select id="produk" name="produk" style="width: 100%; box-sizing: border-box; padding: 4px;">
+                <option>Galon 19L</option>
+                <option>Gas LPG 3kg</option>
+            </select>
+        </div>
+
+        <div class="field-row-stacked" style="margin-bottom: 15px;">
+            <label for="jumlah">Jumlah Stok Baru</label>
+            <input id="jumlah" type="number" value="50" style="width: 100%; box-sizing: border-box; padding: 4px;">
+        </div>
+
+        <div class="field-row" style="justify-content: flex-end;">
+            <button type="submit" style="padding: 4px 15px;">Simpan Stok</button>
+        </div>
     </form>
-</div>
+</fieldset>

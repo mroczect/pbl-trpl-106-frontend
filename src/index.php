@@ -3,7 +3,6 @@
 $routes = [
     'home' => ['file' => 'home.php', 'layout' => 'public'],
     '404' => ['file' => '404.php', 'layout' => 'public'],
-
     'auth/login' => ['file' => 'auth/login.php', 'layout' => 'public'],
     'auth/register-user' => ['file' => 'auth/register-user.php', 'layout' => 'public'],
     'auth/register-agent' => ['file' => 'auth/register-agent.php', 'layout' => 'public'],
@@ -47,28 +46,31 @@ if ($layout !== 'blank') {
     include __DIR__ . '/components/navbar.php';
 
     if ($is_dashboard) {
-        echo '<div style="display: flex; padding: 10px; gap: 10px; height: calc(100vh - 80px); box-sizing: border-box;">';
-        echo '<div style="width: 200px; flex-shrink: 0;">';
+        echo '<div class="dashboard-wrapper">';
+        echo '<div class="sidebar-container">';
         include __DIR__ . "/components/sidebar-{$layout}.php";
         echo '</div>';
-        echo '<div class="window" style="flex: 1; margin: 0; display: flex; flex-direction: column;">';
-        echo '<div class="window-body" style="flex: 1; margin: 0; padding: 10px; overflow: auto;">';
+        echo '<div class="window content-container">';
+        echo '<div class="content-body">';
     } else {
-        echo '<div style="padding: 20px; display: flex; justify-content: center; align-items: center; min-height: calc(100vh - 80px); box-sizing: border-box;">';
+        echo '<div style="padding: 15px; min-height: calc(100vh - 80px); display: flex; align-items: center; justify-content: center;">';
     }
 }
 
 if (file_exists($file)) {
     include $file;
 } else {
-    echo '<p>404 Not Found</p>';
+    echo '<p>File halaman tidak ditemukan.</p>';
 }
 
 if ($layout !== 'blank') {
-    echo '</div>';
     if ($is_dashboard) {
         echo '</div>';
+        echo '</div>';
+        echo '</div>';
+    } else {
         echo '</div>';
     }
     include __DIR__ . '/components/footer.php';
 }
+?>

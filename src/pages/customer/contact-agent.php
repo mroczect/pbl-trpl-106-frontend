@@ -1,15 +1,19 @@
-<h2>Hubungi Agent</h2>
-<table class="w3-table-all w3-margin-top">
-    <thead>
-        <tr class="w3-light-grey">
-            <th>Nama Depot</th>
-            <th>Aksi</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td>Depot Air Segar</td>
-            <td><a href="https://wa.me/628111222333" target="_blank" class="w3-button w3-green w3-small">WhatsApp</a></td>
-        </tr>
-    </tbody>
-</table>
+<h2 style="margin-top: 0; color: #000080;">Hubungi Agent</h2>
+<p style="font-size: 13px;">Daftar depot terdekat yang dapat Anda hubungi.</p>
+
+<div class="sunken-panel" style="margin-top: 15px; height: 150px;">
+    <table class="interactive" style="width: 100%;">
+        <thead>
+            <tr>
+                <th>Nama Depot</th>
+                <th>Aksi</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Depot Air Segar</td>
+                <td><button onclick="window.open('https://wa.me/628111222333', '_blank')" style="padding: 0 8px;">WhatsApp</button></td>
+            </tr>
+        </tbody>
+    </table>
+</div>

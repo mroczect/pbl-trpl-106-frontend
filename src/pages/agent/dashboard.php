@@ -1,17 +1,16 @@
-<h2>Dashboard Agent</h2>
-<p>Selamat datang di panel pengelolaan depot.</p>
+<h2 style="margin-top: 0; color: #000080;">Dashboard Agent</h2>
+<p style="font-size: 13px;">Selamat datang di panel pengelolaan depot. Berikut ringkasan operasional hari ini.</p>
 
-<div class="w3-row-padding w3-margin-top">
-    <div class="w3-col l4 m6 w3-margin-bottom">
-        <div class="w3-card w3-white w3-padding">
-            <h3 class="w3-text-blue w3-margin-0">Pesanan Masuk</h3>
-            <p class="w3-xxlarge w3-margin-0">5</p>
+<fieldset style="margin-top: 15px;">
+    <legend>Ringkasan Depot</legend>
+    <div style="display: flex; gap: 20px;">
+        <div style="background: #fff; border: 1px inset #fff; padding: 10px; flex: 1; text-align: center;">
+            <div style="font-size: 24px; font-weight: bold;">5</div>
+            <div style="font-size: 12px;">Pesanan Masuk</div>
+        </div>
+        <div style="background: #fff; border: 1px inset #fff; padding: 10px; flex: 1; text-align: center;">
+            <div style="font-size: 24px; font-weight: bold;">24</div>
+            <div style="font-size: 12px;">Stok Galon Tersedia</div>
         </div>
     </div>
-    <div class="w3-col l4 m6 w3-margin-bottom">
-        <div class="w3-card w3-white w3-padding">
-            <h3 class="w3-text-green w3-margin-0">Stok Galon</h3>
-            <p class="w3-xxlarge w3-margin-0">24</p>
-        </div>
-    </div>
-</div>
+</fieldset>

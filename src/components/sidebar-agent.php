@@ -1,11 +1,19 @@
-<div class="window" style="width: 100%; height: 100%; margin: 0;">
+<div class="window" style="height: 100%;">
     <div class="title-bar">
-        <div class="title-bar-text">Menu Agent</div>
+        <div class="title-bar-text">Menu Vendor</div>
     </div>
-    <div class="window-body" style="margin: 0; padding: 4px;">
-        <button style="width: 100%; margin-bottom: 2px;" onclick="window.location.href='/index.php?page=agent/dashboard'">Dashboard</button>
-        <button style="width: 100%; margin-bottom: 2px;" onclick="window.location.href='/index.php?page=agent/orders'">Pesanan</button>
-        <button style="width: 100%; margin-bottom: 2px;" onclick="window.location.href='/index.php?page=agent/products'">Produk</button>
-        <button style="width: 100%; margin-bottom: 2px;" onclick="window.location.href='/index.php?page=agent/stock'">Stok</button>
+    <div class="window-body" style="padding: 2px;">
+        <ul class="tree-view" style="height: 100%;">
+            <li><a href="/index.php?page=agent/dashboard" style="text-decoration:none; color:black;">Dashboard</a></li>
+            <li>
+                <span>Operasional</span>
+                <ul>
+                    <li><a href="/index.php?page=agent/orders" style="text-decoration:none; color:black;">Pesanan Masuk</a></li>
+                    <li><a href="/index.php?page=agent/stock" style="text-decoration:none; color:black;">Gudang & Stok</a></li>
+                </ul>
+            </li>
+            <li><a href="/index.php?page=agent/products" style="text-decoration:none; color:black;">Katalog Produk</a></li>
+            <li><a href="/index.php?page=agent/profile-depot" style="text-decoration:none; color:black;">Profil Perusahaan</a></li>
+        </ul>
     </div>
 </div>
