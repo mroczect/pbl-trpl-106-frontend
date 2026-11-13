@@ -1,4 +1,5 @@
 # pbl-trpl-106-frontend
+
 frontend source code for project-based learning
 
 ---
@@ -26,11 +27,10 @@ Zend Engine v4.5.12, Copyright (c) Zend Technologies
 kalok belum tinggal instal, aja,
 
 1. windows : `choco install php`
-2. macOS :  `brew install php`
+2. macOS : `brew install php`
 3. linux : `sudo apt install php php-cli` atau sesuai disor aja cairk aja sendiri.
 
 ---
-
 
 ## Cara run
 
