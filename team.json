@@ -1,0 +1,38 @@
+{
+  "team": {
+    "name": "Tim PBL TRPL 106",
+    "project": "Galonku",
+    "members": [
+      {
+        "id": "4342611031",
+        "name": "Abiel Oktarefandi",
+        "role": "Ketua Tim"
+      },
+      {
+        "id": "4342611032",
+        "name": "Syaikha Aprial Pratama",
+        "role": "Anggota"
+      },
+      {
+        "id": "4342611034",
+        "name": "Muhammad Riduwan Khafidi",
+        "role": "Anggota"
+      },
+      {
+        "id": "4342611036",
+        "name": "Randy Aprindri",
+        "role": "Anggota"
+      },
+      {
+        "id": "4342611037",
+        "name": "Esananta Ryan Saputri",
+        "role": "Anggota"
+      },
+      {
+        "id": "4342611039",
+        "name": "Ayla Azzura",
+        "role": "Anggota"
+      }
+    ]
+  }
+}
