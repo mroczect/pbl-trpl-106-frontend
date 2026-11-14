@@ -102,13 +102,11 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          # Snapshot committed version untuk cmp
           cp src/assets/css/style.css /tmp/style.css.committed
           npm run css > /dev/null
           if ! cmp -s /tmp/style.css.committed src/assets/css/style.css; then
             echo "::error::style.css is out of date."
             echo "::error::Run 'npm run css' locally, then commit src/assets/css/style.css."
-            echo "--- first 40 lines of diff (committed vs freshly built) ---"
             diff /tmp/style.css.committed src/assets/css/style.css | head -40 || true
             exit 1
           fi
@@ -150,25 +148,26 @@ jobs:
             exit 1
           fi
 
-      - name: Verify no stray CSS sources in dist
+      - name: Verify dist CSS is clean
         shell: bash
         run: |
           set -euo pipefail
-          for f in \
-            dist/assets/css/tailwind.css \
-            dist/assets/css/theme.css \
-            dist/assets/css/base.css \
-            dist/assets/css/components; do
-            if [ -e "$f" ]; then
-              echo "::error::Unexpected CSS source in dist: $f"
-              exit 1
-            fi
-          done
+          if [ ! -d dist/assets/css ]; then
+            echo "::error::dist/assets/css/ is missing"
+            exit 1
+          fi
           if [ ! -f dist/assets/css/style.css ]; then
             echo "::error::dist/assets/css/style.css is missing"
             exit 1
           fi
-          echo "dist contains only compiled CSS"
+          extra=$(find dist/assets/css -mindepth 1 ! -name 'style.css' -print -quit)
+          if [ -n "${extra}" ]; then
+            echo "::error::Unexpected file or dir in dist/assets/css/: ${extra}"
+            echo "--- contents ---"
+            find dist/assets/css -mindepth 1
+            exit 1
+          fi
+          echo "dist/assets/css/ contains only style.css"
 
       - name: Verify working tree is clean
         shell: bash

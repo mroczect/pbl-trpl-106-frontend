@@ -90,21 +90,25 @@ foreach ($it as $path) {
         continue;
     }
 
-    $dst = $distDir . '/' . $rel;
-
     if ($path->isDir()) {
-        ensure_dir($dst);
+        if (str_starts_with($rel, 'assets/css/')) {
+            continue;
+        }
+        ensure_dir($distDir . '/' . $rel);
         continue;
     }
 
+    if (str_starts_with($rel, 'assets/css/') && $rel !== 'assets/css/style.css') {
+        continue;
+    }
+
+    $dst = $distDir . '/' . $rel;
     ensure_dir(dirname($dst));
 
-    $isVendor    = str_starts_with($rel, 'assets/vendor/');
-    $isBinary    = (bool) preg_match('/\.(png|jpe?g|gif|svg|ico|webp|woff2?|ttf|otf|eot)$/i', $rel);
-    $isCssSource = str_starts_with($rel, 'assets/css/')
-        && $rel !== 'assets/css/style.css';
+    $isVendor = str_starts_with($rel, 'assets/vendor/');
+    $isBinary = (bool) preg_match('/\.(png|jpe?g|gif|svg|ico|webp|woff2?|ttf|otf|eot)$/i', $rel);
 
-    if ($isVendor || $isBinary || $isCssSource) {
+    if ($isVendor || $isBinary) {
         if (!copy($pathname, $dst)) {
             fail("Failed to copy {$pathname} -> {$dst}");
         }
