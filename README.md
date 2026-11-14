@@ -2,48 +2,57 @@
 
 frontend source code for project-based learning
 
----
+## WHat is it ?????
 
-## Installasi
+>[!NOTE]
+> REPO INI SEBELUM `v1*` bearti masih dev,, cuman prototype integrasi ke be.
 
-untuk instalasi simpel aja cukup siapkan php aja udah bisa senenrnya dan kalau udah tinggal verifikasi dulu phpnya ini udha bisa di run atau ngak.
+see also
 
-cara verifikasi php udah ke install atau belum
+- [mroczect/pbl-trpl-106-databases](https://github.com/mroczect/pbl-trpl-106-databases)
+- [mroczect/pbl-trpl-106-backend](https://github.com/mroczect/pbl-trpl-106-backend)
 
-```sh
-$ php --verison
-```
+cominng soon
 
-output nya
-
-```txt
-PHP 8.5.12 (cli) (built: Oct 19 2026 17:02:46) (NTS gcc x86_64)
-Copyright (c) The PHP Group
-Built by Fedora Project
-Zend Engine v4.5.12, Copyright (c) Zend Technologies
-    with Zend OPcache v8.5.12, Copyright (c), by Zend Technologies
-```
-
-kalok belum tinggal instal, aja,
-
-1. windows : `choco install php`
-2. macOS : `brew install php`
-3. linux : `sudo apt install php php-cli` atau sesuai disor aja cairk aja sendiri.
+- [mroczect/pbl-trpl-106-docs.git](http://github.com/mroczect/pbl-trpl-106-docs.git)
+- [mroczect/pbl-trpl-106-apis.git](http://github.com/mroczect/pbl-trpl-106-apis.git)
 
 ---
 
-## Cara run
+## Minimal Tool yng ada
 
-nah cara runya gampang aja kalau ada `Makefile` tinggal
+| Tool     | Versi Minimum | Cek dengan           |
+| -------- | ------------- | -------------------- |
+| PHP      | 8.5           | `php --version`      |
+| Node     | 20            | `node --version`     |
+| npm      | 10            | `npm --version`      |
+| Composer | 2.x           | `composer --version` |
+| Git      | 2.x           | `git --version`      |
+
+kalau udah ada ini udah enak
+---
+
+## Instalasi
+
+gampang aja tinggal
 
 ```sh
-$ make serve
+git clone https://github.com/mroczect/pbl-trpl-106-frontend.git
+cd pbl-trpl-106-frontend
 ```
 
-kalau ga ada juga ga apa apa tinggal run aja
+nah kalau udah tinggl 
+```sh
+npm install
+composer install
+```
+
+kalau udha langsung aja run
 
 ```sh
-$ php -S localhost:8000 -t src
+npm run dev
 ```
 
-udah gitu aja.
+selesai barang itu.
+
+---
