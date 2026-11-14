@@ -3,7 +3,7 @@
 <fieldset class="form-narrow mt-3">
     <legend>Informasi Depot</legend>
     <form action="/index.php?page=agent/profile-depot" method="POST">
-        <div class="field-row-stacked mt-2">
+        <div class="field-row-stacked">
             <label for="nama_depot">Nama Depot</label>
             <input id="nama_depot" type="text" name="nama_depot" value="Depot Air Segar">
         </div>
@@ -13,7 +13,7 @@
             <input id="shareloc" type="url" name="shareloc" value="https://maps.app.goo.gl/...">
         </div>
 
-        <div class="field-row mt-2" style="justify-content: flex-end;">
+        <div class="form-actions">
             <button type="submit">Simpan Perubahan</button>
         </div>
     </form>

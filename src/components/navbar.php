@@ -10,15 +10,16 @@ $roleLabels = [
 $roleLabel = $roleLabels[$layout] ?? 'Portal';
 ?>
 <header class="title-bar app-title-bar">
-	<div class="title-bar-text">
-    Galonku<?= $layout === 'public' ? '' : ' &mdash; ' . htmlspecialchars($roleLabel, ENT_QUOTES, 'UTF-8') ?>
-	</div>
+    <a class="app-title-bar-brand" href="/index.php?page=home">
+        Galonku<?php if ($layout !== 'public'): ?> <span class="app-title-bar-role">&mdash; <?= htmlspecialchars($roleLabel, ENT_QUOTES, 'UTF-8') ?></span><?php endif; ?>
+    </a>
+
     <nav class="app-title-bar-nav" aria-label="Navigasi akun">
         <?php if ($layout === 'public'): ?>
             <a class="button" href="/index.php?page=auth/login">Masuk</a>
             <a class="button" href="/index.php?page=auth/register-user">Daftar</a>
         <?php elseif ($isDashboard): ?>
-            <a class="button" href="/index.php?page=auth/logout">Logout</a>
+            <a class="button" href="/index.php?page=auth/logout">Keluar</a>
         <?php endif; ?>
     </nav>
 </header>

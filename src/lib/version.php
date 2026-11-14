@@ -2,29 +2,6 @@
 
 declare(strict_types=1);
 
-/**
- * Build metadata resolution.
- *
- * This module answers a single question: which build is currently serving
- * the request. It does so without touching the source tree at deploy
- * time, without a database, and without crashing when the environment is
- * incomplete.
- *
- * Resolution proceeds from cheapest to most expensive source:
- *
- *   1. build-info.php — static artefact produced by `make build`. One
- *      file read, used in production. Values are frozen at build time,
- *      making the answer stable and deterministic across requests.
- *   2. git CLI — invoked only when the build artefact is absent, which
- *      is the development case. Values reflect the live working tree.
- *   3. defaults — the final safety net. Guarantees a complete return
- *      structure even when no data source is available.
- *
- * Module contract: **no function here may throw.** The application
- * footer renders the output of this module on every request; a single
- * uncaught exception would break the entire page. All failures are
- * swallowed and returned as a valid fallback value.
- */
 
 /**
  * Build metadata for the current request.
@@ -57,14 +34,12 @@ declare(strict_types=1);
  */
 function galonku_build_info(): array
 {
-    /** @var array{hash: string, branch: string, timestamp: string|null, dirty: bool}|null $cache */
     static $cache = null;
 
     if ($cache !== null) {
         return $cache;
     }
 
-    /** @var array{hash: string, branch: string, timestamp: string|null, dirty: bool} $defaults */
     $defaults = [
         'hash'      => 'dev',
         'branch'    => 'dev',
@@ -72,38 +47,18 @@ function galonku_build_info(): array
         'dirty'     => false,
     ];
 
-    /** @var non-falsy-string $buildFile */
     $buildFile = dirname(__DIR__) . '/build-info.php';
 
     if (is_file($buildFile)) {
         try {
-            /** @var mixed $info */
             $info = require $buildFile;
 
             if (is_array($info)) {
-                /**
-                 * `+` keeps keys from the left operand and fills the rest
-                 * from the right. This guarantees the return shape stays
-                 * identical to the declared type even when an older or
-                 * partially written build-info.php omits a field. Using
-                 * array_merge would let an incomplete file override
-                 * defaults with null-ish values, breaking the contract.
-                 *
-                 * @var array{hash: string, branch: string, timestamp: string|null, dirty: bool} $merged
-                 */
                 $merged = $info + $defaults;
 
                 return $cache = $merged;
             }
         } catch (\Throwable $e) {
-            /**
-             * A corrupt or half-written build-info.php must not surface
-             * to the user. The exception is deliberately not re-thrown;
-             * execution falls through to git, then to defaults. This is
-             * the only case where a Throwable is caught without action
-             * being taken, and it is intentional: the footer is a
-             * non-critical UI element that must never break the page.
-             */
         }
     }
     $dir = __DIR__;
@@ -120,13 +75,6 @@ function galonku_build_info(): array
     [$branch]       = galonku_run_git('rev-parse --abbrev-ref HEAD', $dir);
     [$status]       = galonku_run_git('status --porcelain', $dir);
 
-    /**
-     * Exit code is checked only for the hash query. If `rev-parse` fails,
-     * HEAD is unborn (fresh repo, no commits yet) or git is not usable,
-     * and the hash string would be meaningless. The branch and status
-     * queries degrade gracefully to empty strings, which the ternary
-     * below converts to the 'dev' sentinel.
-     */
     return $cache = [
         'hash'      => $hCode === 0 && $hash !== '' ? $hash : 'dev',
         'branch'    => $branch !== '' ? $branch : 'dev',
@@ -176,7 +124,6 @@ function galonku_version_title(): string
 {
     $info = galonku_build_info();
 
-    /** @var list<string> $parts */
     $parts = [];
 
     if ($info['branch'] !== '' && $info['branch'] !== 'dev') {
@@ -214,38 +161,20 @@ function galonku_version_title(): string
  */
 function galonku_run_git(string $args, string $cwd): array
 {
-    /** @var array<int, array{0: string, 1: string}> $desc */
     $desc = [1 => ['pipe', 'w'], 2 => ['pipe', 'w']];
 
-    /**
-     * Pre-initialised to an empty array so the variable is defined before
-     * being passed by reference to `proc_open`. PHP would create it on the
-     * fly, but static analysers cannot infer the type of a variable that
-     * only ever gets written through a by-reference parameter.
-     *
-     * @var array<int, resource> $pipes
-     */
     $pipes = [];
 
-    /** @var resource|false $proc */
     $proc = @proc_open('git ' . $args, $desc, $pipes, $cwd);
 
-    /**
-     * Both conditions are checked against concrete keys rather than the
-     * array itself. `proc_open` populates only the descriptors specified
-     * in `$desc`; if for any reason one key is absent, `stream_get_contents`
-     * below would receive `null` instead of a resource and crash.
-     */
     if (!is_resource($proc) || !isset($pipes[1], $pipes[2])) {
         return ['', 1];
     }
 
-    /** @var string|false $stdout */
     $stdout = stream_get_contents($pipes[1]);
     fclose($pipes[1]);
     fclose($pipes[2]);
 
-    /** @var int $code */
     $code = proc_close($proc);
 
     return [trim((string) $stdout), $code];

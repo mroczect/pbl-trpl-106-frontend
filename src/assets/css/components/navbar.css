@@ -1,0 +1,23 @@
+@layer components {
+  .app-title-bar {
+    @apply sticky top-0 z-40 flex items-center justify-between gap-3
+           h-14 px-4 bg-primary text-white border-b border-[#001a3a];
+  }
+  .app-title-bar-brand {
+    @apply text-white no-underline font-semibold text-[16px];
+  }
+  .app-title-bar-role {
+    @apply opacity-70 font-normal;
+  }
+  .app-title-bar-nav {
+    @apply flex items-center gap-2;
+  }
+
+  .app-title-bar-nav a.button {
+    @apply bg-transparent text-white border border-white/40
+           px-3 py-1 text-[13px];
+  }
+  .app-title-bar-nav a.button:hover {
+    @apply bg-white/10 text-white border-white/60;
+  }
+}

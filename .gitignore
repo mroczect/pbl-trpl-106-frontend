@@ -33,3 +33,6 @@ Desktop.ini
 # Tool output
 .velodiff_*.diff
 .snapcat.md
+
+node_modules/
+tmp/

@@ -4,9 +4,9 @@ on:
   push:
     branches: [master]
     paths-ignore:
-      - '**.md'
-      - 'LICENSE'
-      - 'screenshoot/**'
+      - "**.md"
+      - "LICENSE"
+      - "screenshoot/**"
   pull_request:
     branches: [master]
   workflow_dispatch:
@@ -19,8 +19,8 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  COMPOSER_NO_INTERACTION: '1'
-  COMPOSER_PROCESS_TIMEOUT: '600'
+  COMPOSER_NO_INTERACTION: "1"
+  COMPOSER_PROCESS_TIMEOUT: "600"
 
 jobs:
   quality:
@@ -30,7 +30,7 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - { os: ubuntu-latest, php: '8.5' }
+          - { os: ubuntu-latest, php: "8.5" }
 
     steps:
       - name: Checkout
@@ -196,7 +196,7 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.5'
+          php-version: "8.5"
           extensions: mbstring, openssl, tokenizer
           coverage: none
           tools: composer:v2
@@ -228,7 +228,7 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.5'
+          php-version: "8.5"
           extensions: mbstring, openssl, tokenizer
           coverage: none
           ini-values: error_reporting=E_ALL, display_errors=1, log_errors=0

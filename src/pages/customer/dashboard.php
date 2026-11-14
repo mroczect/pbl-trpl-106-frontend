@@ -1,7 +1,7 @@
 <h2 class="page-title">Dashboard Konsumen</h2>
 <p>Selamat datang. Berikut ringkasan aktivitas Anda.</p>
 
-<fieldset>
+<fieldset class="mt-3">
     <legend>Status Pesanan</legend>
     <div class="flex-row">
         <div class="metric-box">
@@ -15,6 +15,6 @@
     </div>
 </fieldset>
 
-<div class="field-row" style="margin-top: 12px;">
+<div class="field-row mt-3">
     <a class="button" href="/index.php?page=customer/products">Pesan Galon / Gas</a>
 </div>

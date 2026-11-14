@@ -1,0 +1,18 @@
+@import "tailwindcss";
+
+@import "./theme.css";
+@import "./base.css";
+
+@import "./components/buttons.css";
+@import "./components/forms.css";
+@import "./components/cards.css";
+@import "./components/navbar.css";
+@import "./components/sidebar.css";
+@import "./components/layout.css";
+@import "./components/tables.css";
+@import "./components/metrics.css";
+@import "./components/titles.css";
+@import "./components/footer.css";
+@import "./components/misc.css";
+
+@source "../../**/*.php";

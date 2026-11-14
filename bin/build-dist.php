@@ -75,7 +75,6 @@ if (is_dir($distDir)) {
 
 ensure_dir($distDir);
 
-/** @var array{php: int, css: int, js: int, copy: int} $stats */
 $stats = ['php' => 0, 'css' => 0, 'js' => 0, 'copy' => 0];
 
 $it = new RecursiveIteratorIterator(

@@ -1,0 +1,12 @@
+@layer components {
+  .metric-box {
+    @apply flex-1 min-w-[140px] bg-white border border-line p-4;
+  }
+
+  .metric-value {
+    @apply text-[24px] font-bold text-primary leading-none;
+  }
+  .metric-label {
+    @apply mt-1 text-[12px] text-accent;
+  }
+}

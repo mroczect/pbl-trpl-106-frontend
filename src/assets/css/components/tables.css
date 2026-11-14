@@ -1,0 +1,29 @@
+@layer components {
+  .data-grid {
+    @apply w-full border-collapse text-[14px] bg-white;
+  }
+
+  .data-grid thead th {
+    @apply bg-surface text-ink text-[13px] font-semibold
+           text-left px-3 py-2 border-b border-line;
+  }
+  .data-grid tbody td {
+    @apply px-3 py-2 border-b border-line text-ink align-middle;
+  }
+  .data-grid tbody tr:last-child td {
+    @apply border-b-0;
+  }
+  .data-grid tbody tr:hover {
+    @apply bg-surface;
+  }
+
+  .sunken-panel {
+    @apply bg-white border border-line overflow-auto;
+  }
+
+  /* Status text di tabel */
+  .status-pending { @apply text-warning font-semibold; }
+  .status-info    { @apply text-info font-semibold; }
+  .status-success { @apply text-success font-semibold; }
+  .status-danger  { @apply text-danger font-semibold; }
+}

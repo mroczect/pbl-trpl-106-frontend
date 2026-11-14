@@ -1,0 +1,16 @@
+{
+  "name": "galonku",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "css": "tailwindcss -i ./src/assets/css/tailwind.css -o ./src/assets/css/style.css --minify",
+    "css:watch": "tailwindcss -i ./src/assets/css/tailwind.css -o ./src/assets/css/style.css --watch",
+    "css:check": "tailwindcss -i ./src/assets/css/tailwind.css -o /tmp/galonku-check.css",
+    "serve": "php -S localhost:8000 -t src",
+    "dev": "npm run css && (npm run css:watch & npm run serve)"
+  },
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.3.5",
+    "tailwindcss": "^4.3.5"
+  }
+}
