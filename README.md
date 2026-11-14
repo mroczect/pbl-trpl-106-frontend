@@ -37,7 +37,7 @@ kalok belum tinggal instal, aja,
 nah cara runya gampang aja kalau ada `Makefile` tinggal
 
 ```sh
-$ make serve`
+$ make serve
 ```
 
 kalau ga ada juga ga apa apa tinggal run aja
