@@ -99,10 +99,12 @@ foreach ($it as $path) {
 
     ensure_dir(dirname($dst));
 
+     = str_starts_with($rel, "assets/css/")
+        && $rel !== "assets/css/style.css";
     $isVendor = str_starts_with($rel, 'assets/vendor/');
     $isBinary = (bool) preg_match('/\.(png|jpe?g|gif|svg|ico|webp|woff2?|ttf|otf|eot)$/i', $rel);
 
-    if ($isVendor || $isBinary) {
+    if ($isVendor || $isBinary || $isCssSource) {
         if (!copy($pathname, $dst)) {
             fail("Failed to copy {$pathname} -> {$dst}");
         }

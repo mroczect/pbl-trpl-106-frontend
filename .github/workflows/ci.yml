@@ -45,6 +45,12 @@ jobs:
           tools: composer:v2
           ini-values: error_reporting=E_ALL, display_errors=1, log_errors=0
 
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "npm"
+
       - name: Verify composer.lock is committed
         shell: bash
         run: |
@@ -58,7 +64,7 @@ jobs:
         run: |
           set -euo pipefail
           failed=0
-          for path in vendor/ dist/ src/build-info.php .php-cs-fixer.cache .phpstan.cache/; do
+          for path in vendor/ dist/ src/build-info.php .php-cs-fixer.cache .phpstan.cache/ node_modules/; do
             if ! git check-ignore -q "$path"; then
               echo "::error::$path is not gitignored"
               failed=1
@@ -84,9 +90,27 @@ jobs:
             ${{ runner.os }}-php-${{ matrix.php }}-composer-
             ${{ runner.os }}-composer-
 
-      - name: Install dependencies
+      - name: Install PHP dependencies
         shell: bash
         run: make install
+
+      - name: Install Node dependencies
+        shell: bash
+        run: npm ci
+
+      - name: Verify style.css is up-to-date
+        shell: bash
+        run: |
+          set -euo pipefail
+          # Simpan versi committed untuk diff nanti
+          cp src/assets/css/style.css /tmp/style.css.committed
+          npm run css > /dev/null
+          if ! cmp -s /tmp/style.css.committed src/assets/css/style.css; then
+            echo "::error::style.css is out of date. Run 'npm run css' locally and commit."
+            diff /tmp/style.css.committed src/assets/css/style.css | head -40
+            exit 1
+          fi
+          echo "style.css is up-to-date"
 
       - name: Security audit
         shell: bash
@@ -124,54 +148,17 @@ jobs:
             exit 1
           fi
 
-      - name: Verify vendored assets are byte-identical
+      - name: Verify no stray CSS sources in dist
         shell: bash
         run: |
           set -euo pipefail
-          if [ ! -d src/assets/vendor ]; then
-            echo "No vendored assets"
-            exit 0
-          fi
-          failed=0
-          while IFS= read -r -d '' src_file; do
-            rel="${src_file#src/}"
-            dst_file="dist/${rel}"
-            if [ ! -f "${dst_file}" ]; then
-              echo "::error::Missing in dist: ${rel}"
-              failed=1
-              continue
+          for f in dist/assets/css/tailwind.css dist/assets/css/theme.css dist/assets/css/base.css; do
+            if [ -f "$f" ]; then
+              echo "::error::Unexpected CSS source in dist: $f"
+              exit 1
             fi
-            if ! cmp -s "${src_file}" "${dst_file}"; then
-              echo "::error::Byte mismatch: ${rel}"
-              failed=1
-            fi
-          done < <(find src/assets/vendor -type f -print0)
-          if [ "${failed}" -ne 0 ]; then exit 1; fi
-          echo "All vendored assets are byte-identical"
-
-      - name: Verify SRI hash matches vendored CSS
-        shell: bash
-        run: |
-          set -euo pipefail
-          integrity=$(grep -o 'integrity="[^"]*"' src/components/head.php | head -n1 | cut -d'"' -f2 || true)
-          if [ -z "${integrity}" ]; then
-            echo "::warning::No integrity attribute in head.php"
-            exit 0
-          fi
-          algorithm="sha384"
-          hash="${integrity}"
-          if [[ "${integrity}" =~ ^(sha256|sha384|sha512)-(.+)$ ]]; then
-            algorithm="${BASH_REMATCH[1]}"
-            hash="${BASH_REMATCH[2]}"
-          fi
-          actual=$(openssl dgst -"${algorithm}" -binary src/assets/vendor/98.css | openssl base64 -A)
-          if [ "${hash}" != "${actual}" ]; then
-            echo "::error::SRI hash mismatch for 98.css"
-            echo "  declared: ${algorithm}-${hash}"
-            echo "  actual  : ${algorithm}-${actual}"
-            exit 1
-          fi
-          echo "SRI hash verified (${algorithm})"
+          done
+          echo "dist contains only compiled CSS"
 
       - name: Verify working tree is clean
         shell: bash
@@ -185,38 +172,6 @@ jobs:
             exit 1
           fi
           echo "Working tree is clean"
-
-  windows-paths:
-    name: Windows path handling (informational)
-    runs-on: windows-latest
-    continue-on-error: true
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: "8.5"
-          extensions: mbstring, openssl, tokenizer
-          coverage: none
-          tools: composer:v2
-
-      - name: Install dependencies
-        run: composer install --no-interaction --prefer-dist --no-progress
-
-      - name: Build distribution
-        run: php bin/build-dist.php
-
-      - name: Verify vendored CSS is byte-identical
-        shell: pwsh
-        run: |
-          $src = Get-FileHash src/assets/vendor/98.css -Algorithm SHA256
-          $dst = Get-FileHash dist/assets/vendor/98.css -Algorithm SHA256
-          if ($src.Hash -ne $dst.Hash) {
-            Write-Error "Vendored 98.css was modified by the build on Windows"
-            exit 1
-          }
-          Write-Host "Vendored CSS is byte-identical on Windows"
 
   smoke:
     name: Smoke - HTTP routes
@@ -270,6 +225,10 @@ jobs:
             if grep -qE '(Fatal error|Parse error|Warning:|Notice:|Deprecated:)' /tmp/body.html; then
               echo "::error::${route} contains PHP error output"
               grep -E '(Fatal error|Parse error|Warning:|Notice:|Deprecated:)' /tmp/body.html | head -20
+              failed=1
+            fi
+            if grep -q '98\.css' /tmp/body.html; then
+              echo "::error::${route} still references 98.css"
               failed=1
             fi
           done
