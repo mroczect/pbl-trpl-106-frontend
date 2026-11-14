@@ -1,0 +1,39 @@
+@layer components {
+  .flex-row {
+    @apply flex flex-wrap gap-2;
+  }
+  @media (max-width: 767px) {
+    .flex-row {
+      @apply flex-col;
+    }
+  }
+
+  .form-narrow {
+    @apply max-w-md;
+  }
+  .form-narrow-md {
+    @apply max-w-2xl;
+  }
+
+  .notification {
+    @apply mb-3 px-3 py-2 text-[14px]
+           bg-[#e8f4ff] border border-[#a8d4ff] text-primary;
+  }
+  .empty-state {
+    @apply text-center py-8 text-accent italic text-[14px];
+  }
+
+  .skip-link {
+    @apply fixed left-2 top-2 z-50 -translate-y-20
+           px-3 py-1 bg-primary text-white text-[14px] no-underline;
+  }
+  .skip-link:focus {
+    @apply translate-y-0;
+  }
+
+  .sr-only {
+    @apply absolute w-px h-px p-0 -m-px overflow-hidden
+           whitespace-nowrap border-0;
+    clip: rect(0, 0, 0, 0);
+  }
+}

@@ -1,0 +1,47 @@
+@layer components {
+  .app-sidebar-toggle > summary {
+    @apply hidden;
+  }
+
+  @media (max-width: 767px) {
+    .app-sidebar-toggle > summary {
+      @apply flex items-center justify-between cursor-pointer
+             bg-white border border-line px-3 py-2
+             text-[14px] font-semibold text-primary;
+      list-style: none;
+    }
+    .app-sidebar-toggle > summary::-webkit-details-marker {
+      display: none;
+    }
+    .app-sidebar-toggle > summary::after {
+      content: "▾";
+      @apply text-accent;
+    }
+    .app-sidebar-toggle[open] > summary::after {
+      content: "▴";
+    }
+    .app-sidebar-toggle[open] > .tree-view {
+      @apply mt-2;
+    }
+  }
+
+  .tree-view {
+    @apply list-none m-0 p-0 bg-white border border-line;
+  }
+  .tree-view li {
+    @apply list-none m-0 border-b border-line;
+  }
+  .tree-view li:last-child {
+    @apply border-b-0;
+  }
+
+  .tree-view a {
+    @apply block px-3 py-2 text-[14px] text-ink no-underline;
+  }
+  .tree-view a:hover {
+    @apply bg-surface text-primary;
+  }
+  .tree-view a[aria-current="page"] {
+    @apply bg-primary text-white;
+  }
+}

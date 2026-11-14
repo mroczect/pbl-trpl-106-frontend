@@ -1,0 +1,15 @@
+@layer components {
+  .page-title {
+    @apply text-[22px] font-bold text-primary m-0 mb-3;
+  }
+  .section-title {
+    @apply text-[16px] font-semibold text-primary m-0 mb-2;
+  }
+
+  .toolbar {
+    @apply flex flex-wrap items-center justify-between gap-3 mb-3;
+  }
+  .toolbar > .page-title {
+    @apply m-0;
+  }
+}

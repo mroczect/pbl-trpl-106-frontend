@@ -1,0 +1,45 @@
+@layer components {
+  .btn,
+  button,
+  input[type="submit"],
+  input[type="reset"],
+  a.button {
+    @apply inline-block cursor-pointer select-none text-center no-underline
+           px-4 py-2 text-[14px] font-normal
+           bg-secondary text-white border border-secondary;
+    border-radius: 0;
+    transition: background-color 0.15s;
+  }
+  .btn:hover,
+  button:hover,
+  input[type="submit"]:hover,
+  a.button:hover {
+    @apply bg-primary border-primary text-white;
+  }
+  .btn:focus-visible,
+  button:focus-visible,
+  input[type="submit"]:focus-visible,
+  a.button:focus-visible {
+    @apply outline outline-2 outline-offset-1 outline-primary;
+  }
+  button:disabled,
+  input[type="submit"]:disabled {
+    @apply opacity-50 cursor-not-allowed;
+  }
+
+  .btn-sm {
+    @apply px-3 py-1 text-[12px];
+  }
+  .btn-outline {
+    @apply bg-white text-primary border-line;
+  }
+  .btn-outline:hover {
+    @apply bg-surface text-primary border-line;
+  }
+  .btn-ghost {
+    @apply bg-transparent text-accent border-transparent;
+  }
+  .btn-ghost:hover {
+    @apply bg-surface text-primary border-transparent;
+  }
+}

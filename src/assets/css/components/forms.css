@@ -1,0 +1,52 @@
+@layer components {
+  input[type="text"],
+  input[type="email"],
+  input[type="password"],
+  input[type="tel"],
+  input[type="number"],
+  input[type="url"],
+  input[type="date"],
+  input[type="search"],
+  select,
+  textarea {
+    @apply w-full bg-white border border-line
+           px-2 py-1.5 text-[14px] text-ink;
+    border-radius: 0;
+  }
+  input:focus,
+  select:focus,
+  textarea:focus {
+    @apply outline-none border-secondary;
+    box-shadow: 0 0 0 1px var(--color-secondary);
+  }
+  input:disabled,
+  input[readonly],
+  textarea:disabled {
+    @apply bg-surface text-accent cursor-not-allowed;
+  }
+  textarea {
+    @apply min-h-[80px] resize-y;
+  }
+  select {
+    @apply cursor-pointer;
+  }
+
+  .field-row {
+    @apply flex flex-wrap items-center gap-2;
+  }
+  .field-row-stacked {
+    @apply flex flex-col gap-1;
+  }
+  .field-row-stacked > * {
+    @apply w-full;
+  }
+
+  /* Baris tombol form. Default: tombol submit rata kanan.
+     Pakai .split kalau ada tombol Batal di kiri. */
+  .form-actions {
+    @apply flex flex-wrap items-center justify-end gap-2 mt-4;
+  }
+  .form-actions.split {
+    @apply justify-between;
+  }
+}

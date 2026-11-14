@@ -1,0 +1,17 @@
+@theme {
+  --font-sans:
+    system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial,
+    sans-serif;
+  --font-mono: Consolas, Monaco, "Courier New", monospace;
+
+  --color-primary:   #002b58;
+  --color-secondary: #3770bf;
+  --color-accent:    #5b758c;
+  --color-surface:   #f5f7fa;
+  --color-line:      #e5e7eb;
+  --color-ink:       #222222;
+  --color-success:   #04aa6d;
+  --color-warning:   #b45309;
+  --color-info:      #2563eb;
+  --color-danger:    #d32f2f;
+}

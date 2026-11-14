@@ -1,0 +1,32 @@
+@layer components {
+  .app-layout {
+    @apply w-full max-w-7xl mx-auto px-4 py-4 flex flex-col gap-4;
+  }
+  @media (min-width: 768px) {
+    .app-layout {
+      @apply flex-row items-start;
+    }
+    .app-sidebar {
+      @apply w-56 shrink-0;
+    }
+    .app-main {
+      @apply flex-1 min-w-0;
+    }
+  }
+  @media (max-width: 767px) {
+    .app-sidebar,
+    .app-main {
+      @apply w-full;
+    }
+  }
+  .app-main-inner {
+    @apply w-full;
+  }
+
+  .app-main--centered {
+    @apply py-8 px-4;
+  }
+  .app-main--centered .app-main-inner {
+    @apply max-w-md mx-auto;
+  }
+}

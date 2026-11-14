@@ -1,0 +1,55 @@
+@layer base {
+  html,
+  body {
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    @apply bg-surface text-ink font-sans text-[15px] leading-normal;
+  }
+
+  h1 {
+    @apply m-0 text-primary font-bold text-[26px];
+  }
+  h2 {
+    @apply m-0 text-primary font-bold text-[20px];
+  }
+  h3 {
+    @apply m-0 text-primary font-bold text-[17px];
+  }
+  h4 {
+    @apply m-0 text-primary font-bold text-[15px];
+  }
+
+  a {
+    @apply text-secondary underline;
+  }
+  a:hover {
+    @apply text-primary;
+  }
+  a:focus-visible {
+    @apply outline outline-2 outline-offset-1 outline-secondary;
+  }
+
+  label {
+    @apply text-[14px] text-ink font-normal;
+  }
+  strong {
+    @apply font-semibold;
+  }
+  code {
+    @apply font-mono text-[13px];
+  }
+
+  hr {
+    @apply border-0 border-t border-line my-4;
+  }
+
+  fieldset {
+    @apply border border-line p-4 m-0;
+  }
+  legend {
+    @apply px-1 text-[13px] font-semibold text-primary;
+  }
+}

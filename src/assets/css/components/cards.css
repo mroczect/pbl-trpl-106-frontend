@@ -1,0 +1,20 @@
+@layer components {
+  .window,
+  .card {
+    @apply bg-white border border-line;
+    border-radius: 0;
+  }
+  .window-body,
+  .card-body {
+    @apply p-4;
+  }
+  .title-bar,
+  .card-header {
+    @apply px-4 py-2 border-b border-line bg-surface;
+  }
+
+  .title-bar-text,
+  .card-title {
+    @apply text-[14px] font-semibold text-primary;
+  }
+}
