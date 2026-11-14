@@ -41,8 +41,6 @@
     @apply w-full;
   }
 
-  /* Baris tombol form. Default: tombol submit rata kanan.
-     Pakai .split kalau ada tombol Batal di kiri. */
   .form-actions {
     @apply flex flex-wrap items-center justify-end gap-2 mt-4;
   }
