@@ -1,0 +1,52 @@
+(function () {
+  "use strict";
+
+  var toggles = document.querySelectorAll("[data-sidebar-toggle]");
+  if (toggles.length) {
+    var mq = window.matchMedia("(min-width: 768px)");
+    var sync = function () {
+      toggles.forEach(function (el) {
+        el.open = mq.matches;
+      });
+    };
+    sync();
+    if (mq.addEventListener) mq.addEventListener("change", sync);
+    else if (mq.addListener) mq.addListener(sync);
+  }
+
+  function loadPerf(cb) {
+    if (window.galonkuPerf) {
+      if (cb) cb();
+      return;
+    }
+    var s = document.createElement("script");
+    s.src = "/assets/js/perf.js";
+    s.defer = true;
+    s.onload = function () {
+      if (cb) cb();
+    };
+    document.head.appendChild(s);
+  }
+
+  var perfWanted = false;
+  try {
+    perfWanted =
+      localStorage.getItem("galonku:perf") === "1" ||
+      new URLSearchParams(location.search).get("perf") === "1";
+  } catch (e) {}
+
+  if (perfWanted) loadPerf();
+
+  window.addEventListener("keydown", function (e) {
+    if (e.ctrlKey && e.shiftKey && (e.key === "P" || e.key === "p")) {
+      e.preventDefault();
+      if (window.galonkuPerf) {
+        window.galonkuPerf.toggle();
+      } else {
+        loadPerf(function () {
+          if (window.galonkuPerf) window.galonkuPerf.toggle();
+        });
+      }
+    }
+  });
+})();
