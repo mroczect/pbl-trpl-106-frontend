@@ -21,9 +21,16 @@
     @apply bg-white border border-line overflow-auto;
   }
 
-  /* Status text di tabel */
-  .status-pending { @apply text-warning font-semibold; }
-  .status-info    { @apply text-info font-semibold; }
-  .status-success { @apply text-success font-semibold; }
-  .status-danger  { @apply text-danger font-semibold; }
+  .status-pending {
+    @apply text-warning font-semibold;
+  }
+  .status-info {
+    @apply text-info font-semibold;
+  }
+  .status-success {
+    @apply text-success font-semibold;
+  }
+  .status-danger {
+    @apply text-danger font-semibold;
+  }
 }
