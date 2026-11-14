@@ -1,6 +1,6 @@
 <h2 class="page-title">Data Agent</h2>
 
-<fieldset>
+<fieldset class="mt-3">
     <legend>Daftar Agent Depot</legend>
     <table class="data-grid">
         <thead>
@@ -9,7 +9,6 @@
                 <th scope="col">Nama Depot</th>
                 <th scope="col">Email</th>
                 <th scope="col">No. HP</th>
-                <th scope="col">Aksi</th>
             </tr>
         </thead>
         <tbody>
@@ -18,20 +17,12 @@
                 <td>Depot Air Segar</td>
                 <td>segar@email.com</td>
                 <td>08111222333</td>
-                <td>
-                    <button type="button" class="btn-sm" disabled title="Fitur belum tersedia">Edit</button>
-                    <button type="button" class="btn-sm" disabled title="Fitur belum tersedia">Hapus</button>
-                </td>
             </tr>
             <tr>
                 <td>AGT-02</td>
                 <td>Galon Makmur</td>
                 <td>makmur@email.com</td>
                 <td>08444555666</td>
-                <td>
-                    <button type="button" class="btn-sm" disabled title="Fitur belum tersedia">Edit</button>
-                    <button type="button" class="btn-sm" disabled title="Fitur belum tersedia">Hapus</button>
-                </td>
             </tr>
         </tbody>
     </table>

@@ -3,7 +3,7 @@
 <fieldset class="form-narrow mt-3">
     <legend>Perbarui Stok Produk</legend>
     <form action="/index.php?page=agent/stock" method="POST">
-        <div class="field-row-stacked mt-2">
+        <div class="field-row-stacked">
             <label for="produk">Pilih Produk</label>
             <select id="produk" name="produk">
                 <option>Galon 19L</option>
@@ -16,7 +16,7 @@
             <input id="jumlah" type="number" name="jumlah" value="50">
         </div>
 
-        <div class="field-row mt-2" style="justify-content: flex-end;">
+        <div class="form-actions">
             <button type="submit">Simpan Stok</button>
         </div>
     </form>

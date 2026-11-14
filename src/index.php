@@ -75,7 +75,6 @@ $pageTitle = $pageTitles[$page] ?? 'Galonku';
 $centeredPages = ['home', '404', 'auth/login', 'auth/register-user', 'auth/register-agent'];
 $isCentered    = in_array($page, $centeredPages, true);
 
-// Flash message (M6)
 $flash = $_SESSION['flash'] ?? null;
 unset($_SESSION['flash']);
 

@@ -1,6 +1,6 @@
 <h2 class="page-title">Keranjang Belanja</h2>
 
-<div class="sunken-panel">
+<div class="sunken-panel mt-3">
     <table class="data-grid">
         <thead>
             <tr>
@@ -19,6 +19,6 @@
     </table>
 </div>
 
-<div class="field-row mt-2" style="justify-content: flex-end;">
+<div class="form-actions">
     <a class="button" href="/index.php?page=customer/checkout">Lanjut ke Checkout</a>
 </div>
