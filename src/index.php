@@ -1,8 +1,7 @@
 <?php
 
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
+require_once __DIR__ . '/lib/auth.php';
+
 
 $routes = [
     'home' => ['file' => 'home.php', 'layout' => 'public'],
@@ -35,6 +34,25 @@ $routes = [
 ];
 
 $page = $_GET['page'] ?? $_POST['page'] ?? 'home';
+
+$isProtectedRoute = str_starts_with($page, 'customer/') || str_starts_with($page, 'agent/') || str_starts_with($page, 'admin/');
+
+if ($isProtectedRoute) {
+    require_login();
+    $userRole = $_SESSION['role'] ?? 'guest';
+    $requiredRole = explode('/', $page)[0];
+    if ($userRole !== $requiredRole) {
+        header("Location: /index.php?page={$userRole}/dashboard");
+        exit;
+    }
+}
+
+if (in_array($page, ['auth/login', 'auth/register-user', 'auth/register-agent'], true) && is_logged_in()) {
+    $userRole = $_SESSION['role'] ?? 'customer';
+    header("Location: /index.php?page={$userRole}/dashboard");
+    exit;
+}
+
 
 if (!isset($routes[$page])) {
     http_response_code(404);
@@ -86,6 +104,9 @@ if ($layout === 'blank') {
 }
 
 include __DIR__ . '/components/head.php';
+
+$currentUser = current_user();
+
 include __DIR__ . '/components/navbar.php';
 
 $renderFlash = function () use ($flash) {
